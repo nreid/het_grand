@@ -5,8 +5,8 @@
 #3 ID table
 
 
-sam=$(cat $3 | grep -oP "BU[0-9]+" | cut -f 1)
-pop=$(cat $3 | grep -oP "BU[0-9]+" | cut -f 2)
+sam=$(echo $1 | grep -oP "BU[0-9]+")
+pop=$(cat $3 | grep $sam | cut -f 2)
 
 fq1=$1
 fq2=$2
