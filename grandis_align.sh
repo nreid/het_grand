@@ -1,6 +1,16 @@
 #!/bin/bash
 
-echo $1 $2
+#1 fastq1
+#2 fastq2
+#3 ID table
+
+
+echo $1 $2 $3
+
+fq1=$1
+fq2=$2
+
+
 
 # module load 
 
