@@ -5,11 +5,13 @@
 #3 ID table
 
 
-echo $1 $2 $3
+sam=$(cat $3 | grep -oP "BU[0-9]+" | cut -f 1)
+pop=$(cat $3 | grep -oP "BU[0-9]+" | cut -f 2)
 
 fq1=$1
 fq2=$2
 
+rg=$(echo \@RG\\tID:$sam.combined\\tPL:Illumina\\tPU:x\\tLB:combined\\tSM:$sam.$pop)
 
 
 # module load 
