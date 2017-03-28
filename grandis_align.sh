@@ -6,7 +6,7 @@
 
 
 sam=$(echo $1 | grep -oP "BU[0-9]+")
-pop=$(cat $3 | grep $sam | cut -f 2)
+pop=$(cat $3 | grep $sam | cut -f 3)
 
 fq1=$1
 fq2=$2
