@@ -1,288 +1,288 @@
-BU000004	Vince_Bayou_B	M
-BU000005	Vince_Bayou_B	M
-BU000006	Vince_Bayou_B	M
-BU000007	Vince_Bayou_B	M
-BU000008	Vince_Bayou_B	M
-BU000012	Smith_Point	M
-BU000014	Smith_Point	M
-BU000017	Smith_Point	M
-BU000018	Smith_Point	M
-BU000023	Smith_Point	M
-BU000024	Smith_Point	M
-BU000025	Smith_Point	M
-BU000031	Smith_Point	M
-BU000032	Smith_Point	M
-BU000033	Smith_Point	M
-BU000035	Smith_Point	M
-BU000036	Smith_Point	M
-BU000037	Smith_Point	M
-BU000039	Smith_Point	M
-BU000041	Smith_Point	M
-BU000046	Smith_Point	M
-BU000048	Smith_Point	M
-BU000049	Smith_Point	M
-BU000052	Smith_Point	M
-BU000053	Smith_Point	M
-BU000054	Smith_Point	M
-BU000055	Smith_Point	M
-BU000056	Smith_Point	M
-BU000057	Smith_Point	M
-BU000062	Gangs_Bayou	M
-BU000063	Gangs_Bayou	M
-BU000064	Gangs_Bayou	M
-BU000065	Gangs_Bayou	M
-BU000066	Gangs_Bayou	M
-BU000067	Gangs_Bayou	M
-BU000068	Gangs_Bayou	M
-BU000069	Gangs_Bayou	M
-BU000070	Gangs_Bayou	M
-BU000071	Gangs_Bayou	M
-BU000072	Gangs_Bayou	M
-BU000073	Gangs_Bayou	M
-BU000074	Gangs_Bayou	M
-BU000075	Gangs_Bayou	M
-BU000076	Gangs_Bayou	M
-BU000077	Gangs_Bayou	F
-BU000078	Gangs_Bayou	F
-BU000081	Gangs_Bayou	F
-BU000082	Gangs_Bayou	F
-BU000083	Gangs_Bayou	F
-BU000084	Gangs_Bayou	F
-BU000085	Gangs_Bayou	F
-BU000086	Gangs_Bayou	F
-BU000087	Gangs_Bayou	F
-BU000088	Gangs_Bayou	F
-BU000089	Gangs_Bayou	F
-BU000090	Gangs_Bayou	F
-BU000092	Gangs_Bayou	F
-BU000093	Gangs_Bayou	F
-BU000094	Gangs_Bayou	F
-BU000095	Gangs_Bayou	F
-BU000097	Gangs_Bayou	F
-BU000100	Gangs_Bayou	F
-BU000101	Gangs_Bayou	F
-BU000102	Gangs_Bayou	F
-BU000103	Gangs_Bayou	F
-BU000104	Gangs_Bayou	F
-BU000105	Gangs_Bayou	F
-BU000106	Gangs_Bayou	F
-BU000110	Gangs_Bayou	F
-BU000116	Gangs_Bayou	F
-BU000120	Gangs_Bayou	F
-BU000121	Gangs_Bayou	F
-BU000123	Gangs_Bayou	M
-BU000124	Gangs_Bayou	M
-BU000125	Gangs_Bayou	F
-BU000126	Gangs_Bayou	F
-BU000127	Gangs_Bayou	F
-BU000129	Vince_Bayou_A	M
-BU000130	Vince_Bayou_A	M
-BU000131	Vince_Bayou_A	M
-BU000132	Vince_Bayou_A	M
-BU000133	Vince_Bayou_A	M
-BU000134	Vince_Bayou_A	M
-BU000135	Vince_Bayou_A	M
-BU000136	Vince_Bayou_A	M
-BU000137	Vince_Bayou_A	M
-BU000138	Vince_Bayou_A	M
-BU000139	Vince_Bayou_A	M
-BU000140	Vince_Bayou_A	F
-BU000141	Vince_Bayou_A	F
-BU000142	Vince_Bayou_A	F
-BU000144	Vince_Bayou_A	F
-BU000145	Vince_Bayou_A	F
-BU000148	Vince_Bayou_A	F
-BU000149	Vince_Bayou_A	F
-BU000150	Vince_Bayou_A	F
-BU000151	Vince_Bayou_A	F
-BU000152	Vince_Bayou_A	F
-BU000153	Vince_Bayou_A	F
-BU000155	Vince_Bayou_A	F
-BU000157	Vince_Bayou_A	F
-BU000158	Vince_Bayou_A	F
-BU000160	Vince_Bayou_A	F
-BU000161	Vince_Bayou_A	F
-BU000164	Vince_Bayou_A	F
-BU000165	Vince_Bayou_A	F
-BU000166	Vince_Bayou_A	F
-BU000167	Vince_Bayou_A	F
-BU000168	Vince_Bayou_B	M
-BU000169	Vince_Bayou_B	M
-BU000170	Vince_Bayou_B	M
-BU000171	Vince_Bayou_B	M
-BU000172	Vince_Bayou_B	M
-BU000173	Vince_Bayou_B	M
-BU000174	Vince_Bayou_B	M
-BU000175	Vince_Bayou_B	M
-BU000176	Vince_Bayou_B	F
-BU000177	Vince_Bayou_B	F
-BU000178	Vince_Bayou_B	F
-BU000179	Vince_Bayou_B	F
-BU000180	Vince_Bayou_B	F
-BU000182	Patrick_Bayou_A	M
-BU000183	Patrick_Bayou_A	M
-BU000184	Patrick_Bayou_A	M
-BU000185	Patrick_Bayou_A	M
-BU000186	Patrick_Bayou_A	M
-BU000187	Patrick_Bayou_A	M
-BU000188	Patrick_Bayou_A	M
-BU000190	Patrick_Bayou_A	F
-BU000191	Patrick_Bayou_A	F
-BU000192	Patrick_Bayou_A	F
-BU000193	Patrick_Bayou_A	F
-BU000194	Patrick_Bayou_A	F
-BU000195	Patrick_Bayou_A	F
-BU000196	Patrick_Bayou_A	F
-BU000197	Patrick_Bayou_A	F
-BU000198	Patrick_Bayou_A	F
-BU000199	Patrick_Bayou_A	F
-BU000200	Patrick_Bayou_A	F
-BU000201	Patrick_Bayou_A	F
-BU000202	Patrick_Bayou_A	F
-BU000203	Patrick_Bayou_A	F
-BU000204	Patrick_Bayou_A	F
-BU000205	Patrick_Bayou_A	F
-BU000206	Patrick_Bayou_A	F
-BU000207	Patrick_Bayou_B	M
-BU000209	Patrick_Bayou_B	M
-BU000210	Patrick_Bayou_B	M
-BU000211	Patrick_Bayou_B	M
-BU000212	Patrick_Bayou_B	M
-BU000213	Patrick_Bayou_B	M
-BU000214	Patrick_Bayou_B	F
-BU000215	Patrick_Bayou_B	F
-BU000217	Patrick_Bayou_B	F
-BU000219	Patrick_Bayou_B	F
-BU000223	Patrick_Bayou_B	F
-BU000225	Patrick_Bayou_B	F
-BU000226	Patrick_Bayou_B	F
-BU000227	Patrick_Bayou_B	F
-BU000228	Patrick_Bayou_B	F
-BU000229	Patrick_Bayou_B	F
-BU000230	Patrick_Bayou_B	F
-BU000231	Patrick_Bayou_B	F
-BU000233	Patrick_Bayou_B	F
-BU000234	Patrick_Bayou_B	F
-BU000235	Patrick_Bayou_B	F
-BU000237	Patrick_Bayou_B	F
-BU000242	Patrick_Bayou_B	F
-BU000244	Smith_Point	F
-BU000245	Smith_Point	F
-BU000246	Smith_Point	F
-BU000248	Smith_Point	F
-BU000249	Smith_Point	F
-BU000250	Smith_Point	F
-BU000252	Smith_Point	F
-BU000253	Smith_Point	F
-BU000254	Smith_Point	F
-BU000255	Smith_Point	F
-BU000256	Smith_Point	F
-BU000257	Smith_Point	F
-BU000259	Smith_Point	F
-BU000260	Smith_Point	F
-BU000261	Smith_Point	F
-BU000262	Smith_Point	F
-BU000263	Smith_Point	F
-BU000264	Smith_Point	F
-BU000265	Smith_Point	F
-BU000266	Smith_Point	F
-BU000269	Smith_Point	F
-BU000270	Smith_Point	F
-BU000271	Smith_Point	F
-BU000272	Smith_Point	F
-BU000318	Baytown_Nature_Park	M
-BU000319	Baytown_Nature_Park	M
-BU000320	Baytown_Nature_Park	M
-BU000321	Baytown_Nature_Park	M
-BU000322	Baytown_Nature_Park	M
-BU000323	Baytown_Nature_Park	M
-BU000324	Baytown_Nature_Park	M
-BU000325	Baytown_Nature_Park	M
-BU000326	Baytown_Nature_Park	M
-BU000327	Baytown_Nature_Park	M
-BU000328	Baytown_Nature_Park	M
-BU000329	Baytown_Nature_Park	M
-BU000330	Baytown_Nature_Park	M
-BU000331	Baytown_Nature_Park	M
-BU000332	Baytown_Nature_Park	M
-BU000333	Baytown_Nature_Park	M
-BU000334	Baytown_Nature_Park	M
-BU000335	Baytown_Nature_Park	M
-BU000336	Baytown_Nature_Park	M
-BU000337	Baytown_Nature_Park	M
-BU000338	Baytown_Nature_Park	M
-BU000339	Baytown_Nature_Park	M
-BU000340	Baytown_Nature_Park	M
-BU000341	Baytown_Nature_Park	M
-BU000343	Baytown_Nature_Park	F
-BU000344	Baytown_Nature_Park	F
-BU000345	Baytown_Nature_Park	F
-BU000346	Baytown_Nature_Park	F
-BU000347	Baytown_Nature_Park	F
-BU000348	Baytown_Nature_Park	F
-BU000349	Baytown_Nature_Park	F
-BU000350	Baytown_Nature_Park	F
-BU000351	Baytown_Nature_Park	F
-BU000352	Baytown_Nature_Park	F
-BU000354	Baytown_Nature_Park	F
-BU000355	Baytown_Nature_Park	F
-BU000356	Baytown_Nature_Park	F
-BU000357	Baytown_Nature_Park	F
-BU000358	Baytown_Nature_Park	F
-BU000359	Baytown_Nature_Park	F
-BU000361	Baytown_Nature_Park	F
-BU000362	Baytown_Nature_Park	F
-BU000364	Baytown_Nature_Park	F
-BU000366	Baytown_Nature_Park	F
-BU000367	Baytown_Nature_Park	F
-BU000372	Baytown_Nature_Park	F
-BU000375	Baytown_Nature_Park	F
-BU000382	Buffalo_Bayou	M
-BU000383	Buffalo_Bayou	M
-BU000384	Buffalo_Bayou	M
-BU000386	Buffalo_Bayou	M
-BU000390	Buffalo_Bayou	M
-BU000391	Buffalo_Bayou	M
-BU000392	Buffalo_Bayou	M
-BU000393	Baytown_Nature_Park	F
-BU000397	Buffalo_Bayou	M
-BU000398	Buffalo_Bayou	M
-BU000400	Buffalo_Bayou	M
-BU000402	Buffalo_Bayou	M
-BU000403	Buffalo_Bayou	M
-BU000405	Buffalo_Bayou	F
-BU000406	Buffalo_Bayou	F
-BU000407	Buffalo_Bayou	F
-BU000408	Buffalo_Bayou	F
-BU000409	Buffalo_Bayou	F
-BU000410	Buffalo_Bayou	F
-BU000411	Buffalo_Bayou	F
-BU000413	Buffalo_Bayou	F
-BU000414	Buffalo_Bayou	F
-BU000415	Buffalo_Bayou	F
-BU000416	Buffalo_Bayou	F
-BU000417	Buffalo_Bayou	F
-BU000418	San_Jacinto_State_Park	M
-BU000419	San_Jacinto_State_Park	M
-BU000420	San_Jacinto_State_Park	M
-BU000421	San_Jacinto_State_Park	M
-BU000424	San_Jacinto_State_Park	M
-BU000425	San_Jacinto_State_Park	M
-BU000426	San_Jacinto_State_Park	M
-BU000427	San_Jacinto_State_Park	M
-BU000431	San_Jacinto_State_Park	M
-BU000432	San_Jacinto_State_Park	M
-BU000433	San_Jacinto_State_Park	M
-BU000439	San_Jacinto_State_Park	M
-BU000441	San_Jacinto_State_Park	F
-BU000442	San_Jacinto_State_Park	F
-BU000443	San_Jacinto_State_Park	F
-BU000444	San_Jacinto_State_Park	F
-BU000446	San_Jacinto_State_Park	F
-BU000449	San_Jacinto_State_Park	F
-BU000451	San_Jacinto_State_Park	F
-BU000454	San_Jacinto_State_Park	F
-BU000458	San_Jacinto_State_Park	F
-BU000460	San_Jacinto_State_Park	F
-BU000463	San_Jacinto_State_Park	F
-BU000464	San_Jacinto_State_Park	F
+BU000004	Vince_Bayou_B	VB_B	M
+BU000005	Vince_Bayou_B	VB_B	M
+BU000006	Vince_Bayou_B	VB_B	M
+BU000007	Vince_Bayou_B	VB_B	M
+BU000008	Vince_Bayou_B	VB_B	M
+BU000012	Smith_Point	SP	M
+BU000014	Smith_Point	SP	M
+BU000017	Smith_Point	SP	M
+BU000018	Smith_Point	SP	M
+BU000023	Smith_Point	SP	M
+BU000024	Smith_Point	SP	M
+BU000025	Smith_Point	SP	M
+BU000031	Smith_Point	SP	M
+BU000032	Smith_Point	SP	M
+BU000033	Smith_Point	SP	M
+BU000035	Smith_Point	SP	M
+BU000036	Smith_Point	SP	M
+BU000037	Smith_Point	SP	M
+BU000039	Smith_Point	SP	M
+BU000041	Smith_Point	SP	M
+BU000046	Smith_Point	SP	M
+BU000048	Smith_Point	SP	M
+BU000049	Smith_Point	SP	M
+BU000052	Smith_Point	SP	M
+BU000053	Smith_Point	SP	M
+BU000054	Smith_Point	SP	M
+BU000055	Smith_Point	SP	M
+BU000056	Smith_Point	SP	M
+BU000057	Smith_Point	SP	M
+BU000062	Gangs_Bayou	GB	M
+BU000063	Gangs_Bayou	GB	M
+BU000064	Gangs_Bayou	GB	M
+BU000065	Gangs_Bayou	GB	M
+BU000066	Gangs_Bayou	GB	M
+BU000067	Gangs_Bayou	GB	M
+BU000068	Gangs_Bayou	GB	M
+BU000069	Gangs_Bayou	GB	M
+BU000070	Gangs_Bayou	GB	M
+BU000071	Gangs_Bayou	GB	M
+BU000072	Gangs_Bayou	GB	M
+BU000073	Gangs_Bayou	GB	M
+BU000074	Gangs_Bayou	GB	M
+BU000075	Gangs_Bayou	GB	M
+BU000076	Gangs_Bayou	GB	M
+BU000077	Gangs_Bayou	GB	F
+BU000078	Gangs_Bayou	GB	F
+BU000081	Gangs_Bayou	GB	F
+BU000082	Gangs_Bayou	GB	F
+BU000083	Gangs_Bayou	GB	F
+BU000084	Gangs_Bayou	GB	F
+BU000085	Gangs_Bayou	GB	F
+BU000086	Gangs_Bayou	GB	F
+BU000087	Gangs_Bayou	GB	F
+BU000088	Gangs_Bayou	GB	F
+BU000089	Gangs_Bayou	GB	F
+BU000090	Gangs_Bayou	GB	F
+BU000092	Gangs_Bayou	GB	F
+BU000093	Gangs_Bayou	GB	F
+BU000094	Gangs_Bayou	GB	F
+BU000095	Gangs_Bayou	GB	F
+BU000097	Gangs_Bayou	GB	F
+BU000100	Gangs_Bayou	GB	F
+BU000101	Gangs_Bayou	GB	F
+BU000102	Gangs_Bayou	GB	F
+BU000103	Gangs_Bayou	GB	F
+BU000104	Gangs_Bayou	GB	F
+BU000105	Gangs_Bayou	GB	F
+BU000106	Gangs_Bayou	GB	F
+BU000110	Gangs_Bayou	GB	F
+BU000116	Gangs_Bayou	GB	F
+BU000120	Gangs_Bayou	GB	F
+BU000121	Gangs_Bayou	GB	F
+BU000123	Gangs_Bayou	GB	M
+BU000124	Gangs_Bayou	GB	M
+BU000125	Gangs_Bayou	GB	F
+BU000126	Gangs_Bayou	GB	F
+BU000127	Gangs_Bayou	GB	F
+BU000129	Vince_Bayou_A	VB_A	M
+BU000130	Vince_Bayou_A	VB_A	M
+BU000131	Vince_Bayou_A	VB_A	M
+BU000132	Vince_Bayou_A	VB_A	M
+BU000133	Vince_Bayou_A	VB_A	M
+BU000134	Vince_Bayou_A	VB_A	M
+BU000135	Vince_Bayou_A	VB_A	M
+BU000136	Vince_Bayou_A	VB_A	M
+BU000137	Vince_Bayou_A	VB_A	M
+BU000138	Vince_Bayou_A	VB_A	M
+BU000139	Vince_Bayou_A	VB_A	M
+BU000140	Vince_Bayou_A	VB_A	F
+BU000141	Vince_Bayou_A	VB_A	F
+BU000142	Vince_Bayou_A	VB_A	F
+BU000144	Vince_Bayou_A	VB_A	F
+BU000145	Vince_Bayou_A	VB_A	F
+BU000148	Vince_Bayou_A	VB_A	F
+BU000149	Vince_Bayou_A	VB_A	F
+BU000150	Vince_Bayou_A	VB_A	F
+BU000151	Vince_Bayou_A	VB_A	F
+BU000152	Vince_Bayou_A	VB_A	F
+BU000153	Vince_Bayou_A	VB_A	F
+BU000155	Vince_Bayou_A	VB_A	F
+BU000157	Vince_Bayou_A	VB_A	F
+BU000158	Vince_Bayou_A	VB_A	F
+BU000160	Vince_Bayou_A	VB_A	F
+BU000161	Vince_Bayou_A	VB_A	F
+BU000164	Vince_Bayou_A	VB_A	F
+BU000165	Vince_Bayou_A	VB_A	F
+BU000166	Vince_Bayou_A	VB_A	F
+BU000167	Vince_Bayou_A	VB_A	F
+BU000168	Vince_Bayou_B	VB_B	M
+BU000169	Vince_Bayou_B	VB_B	M
+BU000170	Vince_Bayou_B	VB_B	M
+BU000171	Vince_Bayou_B	VB_B	M
+BU000172	Vince_Bayou_B	VB_B	M
+BU000173	Vince_Bayou_B	VB_B	M
+BU000174	Vince_Bayou_B	VB_B	M
+BU000175	Vince_Bayou_B	VB_B	M
+BU000176	Vince_Bayou_B	VB_B	F
+BU000177	Vince_Bayou_B	VB_B	F
+BU000178	Vince_Bayou_B	VB_B	F
+BU000179	Vince_Bayou_B	VB_B	F
+BU000180	Vince_Bayou_B	VB_B	F
+BU000182	Patrick_Bayou_A	PB_A	M
+BU000183	Patrick_Bayou_A	PB_A	M
+BU000184	Patrick_Bayou_A	PB_A	M
+BU000185	Patrick_Bayou_A	PB_A	M
+BU000186	Patrick_Bayou_A	PB_A	M
+BU000187	Patrick_Bayou_A	PB_A	M
+BU000188	Patrick_Bayou_A	PB_A	M
+BU000190	Patrick_Bayou_A	PB_A	F
+BU000191	Patrick_Bayou_A	PB_A	F
+BU000192	Patrick_Bayou_A	PB_A	F
+BU000193	Patrick_Bayou_A	PB_A	F
+BU000194	Patrick_Bayou_A	PB_A	F
+BU000195	Patrick_Bayou_A	PB_A	F
+BU000196	Patrick_Bayou_A	PB_A	F
+BU000197	Patrick_Bayou_A	PB_A	F
+BU000198	Patrick_Bayou_A	PB_A	F
+BU000199	Patrick_Bayou_A	PB_A	F
+BU000200	Patrick_Bayou_A	PB_A	F
+BU000201	Patrick_Bayou_A	PB_A	F
+BU000202	Patrick_Bayou_A	PB_A	F
+BU000203	Patrick_Bayou_A	PB_A	F
+BU000204	Patrick_Bayou_A	PB_A	F
+BU000205	Patrick_Bayou_A	PB_A	F
+BU000206	Patrick_Bayou_A	PB_A	F
+BU000207	Patrick_Bayou_B	PB_B	M
+BU000209	Patrick_Bayou_B	PB_B	M
+BU000210	Patrick_Bayou_B	PB_B	M
+BU000211	Patrick_Bayou_B	PB_B	M
+BU000212	Patrick_Bayou_B	PB_B	M
+BU000213	Patrick_Bayou_B	PB_B	M
+BU000214	Patrick_Bayou_B	PB_B	F
+BU000215	Patrick_Bayou_B	PB_B	F
+BU000217	Patrick_Bayou_B	PB_B	F
+BU000219	Patrick_Bayou_B	PB_B	F
+BU000223	Patrick_Bayou_B	PB_B	F
+BU000225	Patrick_Bayou_B	PB_B	F
+BU000226	Patrick_Bayou_B	PB_B	F
+BU000227	Patrick_Bayou_B	PB_B	F
+BU000228	Patrick_Bayou_B	PB_B	F
+BU000229	Patrick_Bayou_B	PB_B	F
+BU000230	Patrick_Bayou_B	PB_B	F
+BU000231	Patrick_Bayou_B	PB_B	F
+BU000233	Patrick_Bayou_B	PB_B	F
+BU000234	Patrick_Bayou_B	PB_B	F
+BU000235	Patrick_Bayou_B	PB_B	F
+BU000237	Patrick_Bayou_B	PB_B	F
+BU000242	Patrick_Bayou_B	PB_B	F
+BU000244	Smith_Point	SP	F
+BU000245	Smith_Point	SP	F
+BU000246	Smith_Point	SP	F
+BU000248	Smith_Point	SP	F
+BU000249	Smith_Point	SP	F
+BU000250	Smith_Point	SP	F
+BU000252	Smith_Point	SP	F
+BU000253	Smith_Point	SP	F
+BU000254	Smith_Point	SP	F
+BU000255	Smith_Point	SP	F
+BU000256	Smith_Point	SP	F
+BU000257	Smith_Point	SP	F
+BU000259	Smith_Point	SP	F
+BU000260	Smith_Point	SP	F
+BU000261	Smith_Point	SP	F
+BU000262	Smith_Point	SP	F
+BU000263	Smith_Point	SP	F
+BU000264	Smith_Point	SP	F
+BU000265	Smith_Point	SP	F
+BU000266	Smith_Point	SP	F
+BU000269	Smith_Point	SP	F
+BU000270	Smith_Point	SP	F
+BU000271	Smith_Point	SP	F
+BU000272	Smith_Point	SP	F
+BU000318	Baytown_Nature_Park	BNP	M
+BU000319	Baytown_Nature_Park	BNP	M
+BU000320	Baytown_Nature_Park	BNP	M
+BU000321	Baytown_Nature_Park	BNP	M
+BU000322	Baytown_Nature_Park	BNP	M
+BU000323	Baytown_Nature_Park	BNP	M
+BU000324	Baytown_Nature_Park	BNP	M
+BU000325	Baytown_Nature_Park	BNP	M
+BU000326	Baytown_Nature_Park	BNP	M
+BU000327	Baytown_Nature_Park	BNP	M
+BU000328	Baytown_Nature_Park	BNP	M
+BU000329	Baytown_Nature_Park	BNP	M
+BU000330	Baytown_Nature_Park	BNP	M
+BU000331	Baytown_Nature_Park	BNP	M
+BU000332	Baytown_Nature_Park	BNP	M
+BU000333	Baytown_Nature_Park	BNP	M
+BU000334	Baytown_Nature_Park	BNP	M
+BU000335	Baytown_Nature_Park	BNP	M
+BU000336	Baytown_Nature_Park	BNP	M
+BU000337	Baytown_Nature_Park	BNP	M
+BU000338	Baytown_Nature_Park	BNP	M
+BU000339	Baytown_Nature_Park	BNP	M
+BU000340	Baytown_Nature_Park	BNP	M
+BU000341	Baytown_Nature_Park	BNP	M
+BU000343	Baytown_Nature_Park	BNP	F
+BU000344	Baytown_Nature_Park	BNP	F
+BU000345	Baytown_Nature_Park	BNP	F
+BU000346	Baytown_Nature_Park	BNP	F
+BU000347	Baytown_Nature_Park	BNP	F
+BU000348	Baytown_Nature_Park	BNP	F
+BU000349	Baytown_Nature_Park	BNP	F
+BU000350	Baytown_Nature_Park	BNP	F
+BU000351	Baytown_Nature_Park	BNP	F
+BU000352	Baytown_Nature_Park	BNP	F
+BU000354	Baytown_Nature_Park	BNP	F
+BU000355	Baytown_Nature_Park	BNP	F
+BU000356	Baytown_Nature_Park	BNP	F
+BU000357	Baytown_Nature_Park	BNP	F
+BU000358	Baytown_Nature_Park	BNP	F
+BU000359	Baytown_Nature_Park	BNP	F
+BU000361	Baytown_Nature_Park	BNP	F
+BU000362	Baytown_Nature_Park	BNP	F
+BU000364	Baytown_Nature_Park	BNP	F
+BU000366	Baytown_Nature_Park	BNP	F
+BU000367	Baytown_Nature_Park	BNP	F
+BU000372	Baytown_Nature_Park	BNP	F
+BU000375	Baytown_Nature_Park	BNP	F
+BU000382	Buffalo_Bayou	BB	M
+BU000383	Buffalo_Bayou	BB	M
+BU000384	Buffalo_Bayou	BB	M
+BU000386	Buffalo_Bayou	BB	M
+BU000390	Buffalo_Bayou	BB	M
+BU000391	Buffalo_Bayou	BB	M
+BU000392	Buffalo_Bayou	BB	M
+BU000393	Baytown_Nature_Park	BNP	F
+BU000397	Buffalo_Bayou	BB	M
+BU000398	Buffalo_Bayou	BB	M
+BU000400	Buffalo_Bayou	BB	M
+BU000402	Buffalo_Bayou	BB	M
+BU000403	Buffalo_Bayou	BB	M
+BU000405	Buffalo_Bayou	BB	F
+BU000406	Buffalo_Bayou	BB	F
+BU000407	Buffalo_Bayou	BB	F
+BU000408	Buffalo_Bayou	BB	F
+BU000409	Buffalo_Bayou	BB	F
+BU000410	Buffalo_Bayou	BB	F
+BU000411	Buffalo_Bayou	BB	F
+BU000413	Buffalo_Bayou	BB	F
+BU000414	Buffalo_Bayou	BB	F
+BU000415	Buffalo_Bayou	BB	F
+BU000416	Buffalo_Bayou	BB	F
+BU000417	Buffalo_Bayou	BB	F
+BU000418	San_Jacinto_State_Park	SJSP	M
+BU000419	San_Jacinto_State_Park	SJSP	M
+BU000420	San_Jacinto_State_Park	SJSP	M
+BU000421	San_Jacinto_State_Park	SJSP	M
+BU000424	San_Jacinto_State_Park	SJSP	M
+BU000425	San_Jacinto_State_Park	SJSP	M
+BU000426	San_Jacinto_State_Park	SJSP	M
+BU000427	San_Jacinto_State_Park	SJSP	M
+BU000431	San_Jacinto_State_Park	SJSP	M
+BU000432	San_Jacinto_State_Park	SJSP	M
+BU000433	San_Jacinto_State_Park	SJSP	M
+BU000439	San_Jacinto_State_Park	SJSP	M
+BU000441	San_Jacinto_State_Park	SJSP	F
+BU000442	San_Jacinto_State_Park	SJSP	F
+BU000443	San_Jacinto_State_Park	SJSP	F
+BU000444	San_Jacinto_State_Park	SJSP	F
+BU000446	San_Jacinto_State_Park	SJSP	F
+BU000449	San_Jacinto_State_Park	SJSP	F
+BU000451	San_Jacinto_State_Park	SJSP	F
+BU000454	San_Jacinto_State_Park	SJSP	F
+BU000458	San_Jacinto_State_Park	SJSP	F
+BU000460	San_Jacinto_State_Park	SJSP	F
+BU000463	San_Jacinto_State_Park	SJSP	F
+BU000464	San_Jacinto_State_Park	SJSP	F
