@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --ntasks 12
-#SBATCH --cpus-per-task 2 
+#SBATCH --cpus-per-task 1 
 
 module load samtools 
 
