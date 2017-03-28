@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --ntasks 288
+#SBATCH --ntasks 12
 #SBATCH --cpus-per-task 2 
 
 module load samtools 
