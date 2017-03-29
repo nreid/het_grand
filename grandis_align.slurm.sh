@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --ntasks 12
-#SBATCH --cpus-per-task 1 
+#SBATCH --ntasks 24
+#SBATCH --cpus-per-task 2 
 
 # "module" alone was an unrecognized command. very confusing, the parallel slurm script runs this before "module" though. so I'm trying it. 
 source /etc/profile.d/modules.sh
