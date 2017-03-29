@@ -7,7 +7,7 @@
 # need to load parallel and samtools
 
 
-sam=$(echo $1 | sed 's/.all.*//')
+sam=$(echo $1 | sed 's/.all.*//' | sed 's/.*\//')
 
 echo $sam
 
