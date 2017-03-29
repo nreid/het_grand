@@ -6,29 +6,37 @@
 
 # need to load parallel and samtools
 
+bwagenind=/scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.bgz
+
+BWA=~/bin/bwa/bwa
+SBL=~/bin/samblaster/samblaster
+BED=~/bin/bedtools2/bin/bedtools
+
+#TEM=/scratch/nmr15102/heteroclitus_bam/BP-29.all.bam
 
 sam=$(echo $1 | sed 's/.all.*//' | sed 's/.*\///')
 
-echo $sam
+fq1=$sam.1.fastq
+fq2=$sam.2.fastq
 
-# fq1=$1
-# fq2=$2
+fqdir=/scratch/nmr15102/heteroclitus_fastq
+outdir=/scratch/nmr15102/heteroclitus_align
 
-# rg=$(echo \@RG\\tID:$sam.combined\\tPL:Illumina\\tPU:x\\tLB:combined\\tSM:$sam.$pop)
+cmdline1=samtools\ sort\ -T\ $fqdir/$sam.temp\ -n\ $1
+cmdline2=$BED\ bamtofastq\ -i\ stdin\ -fq\ $fqdir/$fq1\ -fq2\ $fqdir/$fq2
 
-# outdir=/scratch/nmr15102/grandis_align
-# outroot=$sam\_$pop
+rg=$(echo \@RG\\tID:$sam\\tPL:Illumina\\tPU:x\\tLB:combined\\tSM:$sam)
 
+echo $sam $fq1 $fq2 $rg
 
+echo $cmdline1
+echo $cmdline2
 
-# bwagenind=/scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.bgz
+$cmdline1 | $cmdline2
 
-# BWA=~/bin/bwa/bwa
-# SBL=~/bin/samblaster/samblaster
+cmdline3=$BWA\ mem\ $bwagenind\ -t\ 2\ -R\ $rg\ $fqdir/$fq1\ $fqdir/$fq2
+echo $cmdline3
 
-# cmdline=$BWA\ mem\ $bwagenind\ -t\ 2\ -R\ $rg\ $fq1\ $fq2
-# echo $cmdline
-
-# # execute bwa command line, pipe to samblaster to mark duplicates and create files containing discordant and split alignments, then to samtools to sort output. 
-# $cmdline | $SBL -e -d $outdir/$outroot.disc.sam -s $outdir/$outroot.split.sam | samtools view -S -h -u - | samtools sort -T $outdir/$outroot - >$outdir/$outroot.bam
+# execute bwa command line, pipe to samblaster to mark duplicates and create files containing discordant and split alignments, then to samtools to sort output. 
+$cmdline3 | $SBL -e -d $outdir/$sam.disc.sam -s $outdir/$sam.split.sam | samtools view -S -h -u - | samtools sort -T $outdir/$sam - >$outdir/$sam.bam
 
