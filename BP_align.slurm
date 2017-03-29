@@ -9,5 +9,5 @@ module load samtools
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel -n0 sh ~/het_grand/het_align.sh ::: $(ls /scratch/nmr15102/heteroclitus_bam/BP-*bam)
+$parallel -n0 sh ~/het_grand/het_align.sh ::: $(cat /scratch/nmr15102/heteroclitus_bam/BP.list)
 
