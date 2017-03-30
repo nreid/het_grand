@@ -12,14 +12,6 @@ WIN5KB=/scratch/nmr15102/fhet_genome/5kb1kb_win.bed
 WIN1KB=/scratch/nmr15102/fhet_genome/1kb_win.bed
 
 GEN=/scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.genome
-# HIC=~/popgen/alignments/bowtie/ALL/coverage/hicov.merge.bed
-
-
-
-# $BED multicov -bams $(ls /scratch/nmr15102/grandis_align/*bam | tr "\n" "\t") -bed /scratch/nmr15102/fhet_genome/5kb1kb_win.bed >/scratch/nmr15102/genome_stats/coverage/grandis_cov_5kb1kb.bed
-
-# $BED multicov -bams $(ls /scratch/nmr15102/grandis_align/*bam | tr "\n" "\t") -bed /scratch/nmr15102/fhet_genome/1kb_win.bed >/scratch/nmr15102/genome_stats/coverage/grandis_cov_1kb.bed
-
 
 LIST=/scratch/nmr15102/heteroclitus_align/meta/KC.list
 
@@ -33,7 +25,7 @@ $BED map \
 -b stdin \
 -c 5 -o mean,median,count \
 -g $GEN \
->$OUTDIR/grandis.5kb1kb.qf.cov
+>$OUTDIR/kc.5kb1kb.qf.cov
 
 $BAM merge -list $LIST | \
 $BAM filter -in - -mapQuality ">30" -isDuplicate false -isProperPair true | \
@@ -43,4 +35,4 @@ $BED map \
 -b stdin \
 -c 5 -o mean,median,count \
 -g $GEN \
->$OUTDIR/grandis.1kb.qf.cov
+>$OUTDIR/kc.1kb.qf.cov
