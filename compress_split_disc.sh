@@ -6,7 +6,7 @@
 
 # need to load parallel and samtools
 
-outfile=$(echo $1 | sed 's/sam//')
+outfile=$(echo $1 | sed 's/.sam//')
 
 # execute bwa command line, pipe to samblaster to mark duplicates and create files containing discordant and split alignments, then to samtools to sort output. 
 samtools view -S -h -u $1 | samtools sort -T $outfile - >$outfile.bam
