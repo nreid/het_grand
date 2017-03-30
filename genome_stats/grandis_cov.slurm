@@ -21,7 +21,7 @@ GEN=/scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_ge
 # $BED multicov -bams $(ls /scratch/nmr15102/grandis_align/*bam | tr "\n" "\t") -bed /scratch/nmr15102/fhet_genome/1kb_win.bed >/scratch/nmr15102/genome_stats/coverage/grandis_cov_1kb.bed
 
 
-LIST=/scratch/nmr15102/grandis_align/GRAND.list
+LIST=/scratch/nmr15102/grandis_align/meta/GRAND.list
 
 OUTDIR=/scratch/nmr15102/genome_stats/coverage/
 
