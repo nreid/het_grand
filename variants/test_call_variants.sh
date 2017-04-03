@@ -11,4 +11,6 @@ module load samtools
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
+date
 $parallel -a /scratch/nmr15102/fhet_genome/chunks/gensplit_300.00001.bed sh ~/het_grand/variants/call_variants_subregion.sh
+date
