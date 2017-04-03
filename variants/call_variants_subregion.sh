@@ -18,6 +18,7 @@ POPSFILE=/scratch/nmr15102/variants/meta/popsfile.txt
 HICOV=/scratch/nmr15102/variants/meta/hicov.merge.sort.bed
 
 OUTFILE=$SCAF\_$START\_$END.vcf
+echo $OUTFILE
 
 FB=~/bin/freebayes/bin/freebayes 
 BED=~/bin/bedtools2/bin/bedtools
