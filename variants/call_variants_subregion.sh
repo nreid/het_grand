@@ -17,12 +17,13 @@ LISTFILE=/scratch/nmr15102/variants/meta/bams.list
 POPSFILE=/scratch/nmr15102/variants/meta/popsfile.txt
 HICOV=/scratch/nmr15102/variants/meta/hicov.merge.sort.bed
 
-OUTFILE=$SCAF\_$START\_$END.vcf
+OUTFILE=$SCAF\_$START\_$END.vcf.gz
 echo $OUTFILE
 
 FB=~/bin/freebayes/bin/freebayes 
 BED=~/bin/bedtools2/bin/bedtools
 BAM=~/bin/bamtools/bin/bamtools
+BGZ=~/bin/htslib/bgzip
 REFGEN=/scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta
 
 cd $bamdir
@@ -30,6 +31,7 @@ cd $bamdir
 $BAM merge -list $LISTFILE -region $REGION | \
 $BAM filter -in stdin -mapQuality ">30" -isProperPair true | \
 $BED intersect -v -a stdin -b $HICOV | \
-$FB -f $REFGEN --populations $POPSFILE --stdin  >$OUTDIR/$OUTFILE
+$FB -f $REFGEN --populations $POPSFILE --stdin | \
+$BGZ -c >$OUTDIR/$OUTFILE
 
 echo $REGION done
