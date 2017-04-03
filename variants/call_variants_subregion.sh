@@ -9,7 +9,7 @@ SCAF=$(echo $1 | cut -f 1 -d ' ')
 START=$(expr $(echo $1 | cut -f 2 -d ' ') + 1)
 END=$(echo $1 | cut -f 3 -d ' ')
 
-$REGION=$SCAF:$START-$END
+REGION=$SCAF:$START-$END
 echo $REGION
 
 OUTDIR=/scratch/nmr15102/variants/subvars
