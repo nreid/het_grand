@@ -16,4 +16,4 @@ directory 'genome_stats':
 directory 'variants':
 * call_variants_subregion.sh - basic variant calling script. invoked using parallel
 * directory 'chunks':
-- 300 scripts which each invoke call_variants_subregion.sh on a set of regions adding up to approximately 3.4mb
+	- 300 scripts which each invoke call_variants_subregion.sh on a set of regions adding up to approximately 3.4mb
