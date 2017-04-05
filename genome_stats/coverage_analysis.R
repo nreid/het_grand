@@ -12,11 +12,12 @@ load("~/Dropbox/Public/coveragedataV2.RData")
 	# columns 1-3: window location
 	# columns 4-11: base composition of reference genome
 		# "n" is number of N bases
-		# "n_bases" is number of ACGT bases. silly, I know. 
-	# columns 12-17: number of 100bp reads mapped with Q>=30
-		# to the window for six heteroclitus populations
-		# ER and KC are "southern", the rest are northern
-		# BP and ER are "tolerant", the rest are sensitive
+		# "bases" is number of ACGT bases. silly, I know. 
+	# columns 12-24: number of 100bp reads mapped with Q>=30
+		# captials are grandis, lower case are heteroclitus
+		# er and kc are "southern", the rest are northern
+		# sh nyc are admixed heteroclitus
+		# bp and fp are northern heteroclitus
 
 # the data are in a ridiculous order. first we'll reorder the table
 	# by scaffold size
@@ -79,6 +80,16 @@ write.table(g2[!subwfh,1:3],row.names=FALSE,col.names=FALSE,quote=FALSE,sep="\t"
 # then merge overlapping/bookended intervals in bedtools:
 	# ~/bin/bedtools/bin/bedtools merge -i hicov.1kb.bed -d 0 | sort -k1,1 -k2,2n >hicov.merge.bed
 	# then move the NCXXXX line to the end. 
+
+# We evaluated coverage in 1kb windows for each of thirteen populations. 
+# We excluded windows that fell in the 1.5% tails of any of the thirteen populations. 
+# This resulted in a total of 27581 (2.9%) 1kb windows excluded for high coverage and 32427 (or 3.4% excluded for low coverage). 
+# We retained no windows with greater than 1.98x or less than 0.4% the median coverage. 
+
+
+
+
+
 
 st <- subwf & g2[,1] == "Scaffold0"
 
