@@ -705,6 +705,9 @@ write.table(grandgeno[gn,],file="het_grand_data/grand.geno",sep="\t",row.names=F
 write.table(basereco[nn,],file="het_grand_data/grand.reco",sep="\t",row.names=FALSE,quote=FALSE)
 
 
+# run sweepfinder e.g. 
+# ./SweepFinder2 -s 400 ~/projects/het_grand_data/grand.geno ~/projects/het_grand_data/grand.geno.out
+
 # read in some sweepfinder results
 ngof <- read.table("het_grand_data/north.fold.geno.out",stringsAsFactors=FALSE,header=TRUE)
 ngo <- read.table("het_grand_data/north.geno.out",stringsAsFactors=FALSE,header=TRUE)
