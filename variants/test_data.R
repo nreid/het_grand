@@ -718,6 +718,8 @@ sgo <- read.table("het_grand_data/south.geno.out",stringsAsFactors=FALSE,header=
 sgo2 <- read.table("het_grand_data/south.geno.out.3",stringsAsFactors=FALSE,header=TRUE)
 sgo3 <- read.table("het_grand_data/south.geno.out.2",stringsAsFactors=FALSE,header=TRUE)
 
+ago <- read.table("het_grand_data/admix.geno.out",stringsAsFactors=FALSE,header=TRUE)
+
 ggo <- read.table("het_grand_data/grand.geno.out",stringsAsFactors=FALSE,header=TRUE)
 ggo2 <- read.table("het_grand_data/grand.geno.out.3",stringsAsFactors=FALSE,header=TRUE)
 ggo3 <- read.table("het_grand_data/grand.geno.out.2",stringsAsFactors=FALSE,header=TRUE)
