@@ -1,3 +1,5 @@
+library(stringr)
+library(magrittr)
 # this is really dumb!
 cname <- c("CHROM",
 "POS",
@@ -622,8 +624,8 @@ tr <- nj(dd)
 
 # MDS and tree plots
 plot(md,col=factor(pop[subi]),pch=20)
-plot(tr,"unrooted")
-
+plot(tr,"unrooted",show.tip.label=FALSE)
+tiplabels(pch=20,col=factor(pop[subi]))
 # calculate population allele frequencies
 popfreqs <- c()
 
