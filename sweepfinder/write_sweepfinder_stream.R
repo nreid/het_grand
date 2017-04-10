@@ -20,7 +20,7 @@ sss[grep("GB|BB|SJSP|SP|BNP|PB|VB",sss)] <- "Grand"
 sssu <- unique(sss)
 
 # initialize output files
-write(c("position", "x", "n", "folded"),"test.out")
+cat(c("position", "x", "n", "folded"),"\n",file="test.out")
 
 # start proccessing data stream
 f <- file("stdin")
