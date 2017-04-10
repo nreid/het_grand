@@ -660,8 +660,10 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 	# write some output!
 	for(i in 1:3){
-		outname <- paste(c(line[1],sssu[i],"pol"),collapse="_")
-		out <- c(line[2],ssscounts[i],sssam[i],"0")
- 		cat(paste(out,collapse="\t"),"\n",file=paste(outname,".geno",sep="\t"),append=TRUE)
+		if(ssscounts[i]>10 & sssam[i]>0){
+			outname <- paste(c(line[1],sssu[i],"pol"),collapse="_")
+			out <- c(line[2],ssscounts[i],sssam[i],"0")
+ 			cat(paste(out,collapse="\t"),"\n",file=paste(outname,".geno",sep="\t",collapse="\t"),append=TRUE)
+ 		}
 	}
 }
