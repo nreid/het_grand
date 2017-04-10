@@ -32,7 +32,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	line <- str_split(line,"\\t") %>% unlist()
 
 	# skip records with >2 alleles
-	if(grepl(",",line[,5])){next()}
+	if(grepl(",",line[5])){next()}
 
 	# convert haploid genotypes to numeric
 	line2 <- as.matrix(line[10:585]) %>% as.numeric()
