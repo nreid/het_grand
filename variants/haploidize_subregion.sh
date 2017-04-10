@@ -19,7 +19,7 @@ VCF=/scratch/nmr15102/variants/hetgrand.vcf.gz
 OUTFILE=$SCAF\_$START\_$END.hap.vcf
 echo $OUTFILE
 
-TAB=~/bin/htslib/bgzip
+TAB=~/bin/htslib/tabix
 BGZ=~/bin/htslib/bgzip
 
 
