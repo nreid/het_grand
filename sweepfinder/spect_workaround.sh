@@ -13,5 +13,5 @@ dim=$(expr $dim - 1)
 for file in $(ls input/*.1_$1_*)
 do
 echo $1 $file
-awk -v dim="$dim" '{OFS="\t"}{if (NR==2) $3=dim}{if ($3>dim) $3=dim}{print}' $file >tmp.$pop && mv tmp.$pop $file
+awk -v dim="$dim" '{OFS="\t"}{if (NR==2) $3=dim}{if ($3>dim) $3=dim}{if ($2>dim) $2=dim}{if (NR==1) {$3="n";$2="x"} }{print}' $file >tmp.$1 && mv tmp.$1 $file
 done
