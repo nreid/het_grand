@@ -671,20 +671,22 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	# polarize by grandis
 
 	if(ssscounts[4]/sssam[4] > 0.5) {
-		ssscounts <- sssam - ssscounts
-		popcounts <- popsam - popcounts
+		ssscounts_p <- sssam - ssscounts
+		popcounts_p <- popsam - popcounts
 	}
 
 	# write some output!
 
 	# heteroclitus
-	for(i in 1:3){
-		if(ssscounts[i]>0 & sssam[i]>10){
-			outname <- paste(c(line[1],sssu[i],"pol"),collapse="_")
-			out <- c(line[2],ssscounts[i],sssam[i],"0")
- 			cat(paste(out,collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""),append=TRUE)
-			}
-		}
+ # skip heteroclitus
+	# for(i in 1:3){
+	# 	if(ssscounts[i]>0 & sssam[i]>10){
+	# 		outname <- paste(c(line[1],sssu[i],"pol"),collapse="_")
+	# 		out <- c(line[2],ssscounts[i],sssam[i],"0")
+ # 			cat(paste(out,collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""),append=TRUE)
+	# 		}
+	# 	}
+
 	# grandis 
 	if(ssscounts[4]>0 & sssam[4]>10){
 		outname <- paste(c(line[1],sssu[4],"fold"),collapse="_")
@@ -693,7 +695,8 @@ while(length(line <- readLines(f,n=1)) > 0) {
  		}
 
 	# sampling sites, treat all as folded because it would be a pain otherwise
-	for(i in 1:13){
+#	for(i in 1:13){
+	for(i in 7:13){
 		if(popcounts[i]>0 & popsam[i]>5){
 			outname <- paste(c(line[1],popu[i],"fold"),collapse="_")
 			out <- c(line[2],popcounts[i],popsam[i],"1")
