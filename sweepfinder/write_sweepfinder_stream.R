@@ -696,7 +696,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	for(i in 1:13){
 		if(popcounts[i]>0 & popsam[i]>5){
 			outname <- paste(c(line[1],popu[i],"fold"),collapse="_")
-			out <- c(line[2],popcounts[i],popsam[i],"0")
+			out <- c(line[2],popcounts[i],popsam[i],"1")
  			cat(paste(out,collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""),append=TRUE)
 			}
 		}
