@@ -619,15 +619,15 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 	if(ind==1){
 		# initialize output files
-		for(i in 1:3){
-		outname <- paste(c(line[1],sssu[i],"pol"),collapse="_")
-		cat(paste(c("position", "x", "n", "folded"),collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""))	
-		}
+		# for(i in 1:3){
+		# outname <- paste(c(line[1],sssu[i],"pol"),collapse="_")
+		# cat(paste(c("position", "x", "n", "folded"),collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""))	
+		# }
 		outname <- paste(c(line[1],sssu[4],"fold"),collapse="_")
 		cat(paste(c("position", "x", "n", "folded"),collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""))	
 
 		# sampling sites
-		for(i in 1:13){
+		for(i in 7:13){
 		outname <- paste(c(line[1],popu[i],"fold"),collapse="_")
 		cat(paste(c("position", "x", "n", "folded"),collapse="\t"),"\n",sep="",file=paste(outname,".geno",sep=""))	
 		}
