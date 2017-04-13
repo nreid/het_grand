@@ -11,5 +11,5 @@ specfile=$(echo $1 | grep -oP "(?<=\.1_)[A-Za-z]+_[a-z]+").spect
 gridfile=$(echo $1 | grep -oP ".*.1").grid
 outfile=$(echo $1 | sed 's/geno/out/')
 
-$echo $specfile $gridfile $outfile $1
+echo $specfile $gridfile $outfile $1
 $SF2 -lu $griddir/$gridfile $indir/$1 $specdir/$specfile $outdir/$outfile
