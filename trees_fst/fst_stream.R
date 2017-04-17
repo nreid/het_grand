@@ -685,7 +685,7 @@ if(length(outsam) > 0){
 	
 	fstout <- c()
 	
-	if(dim(outsam)[1] >= 30){
+	if(dim(outsam)[1] >= 20){
 	
 		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
 		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,3],outsam[,3]))
