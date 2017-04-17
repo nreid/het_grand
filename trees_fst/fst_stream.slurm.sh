@@ -11,9 +11,11 @@ module load r/3.2.3
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
 INTERVAL=/scratch/nmr15102/sweepfinder/null_invervals_10kb.txt
+DIR=/scratch/nmr15102/sweepfinder
+OUT=fst.null.out
 
 date
 
-$parallel -a $INTERVAL sh ~/het_grand/trees_fst/fst_stream.sh
+$parallel -a $INTERVAL sh ~/het_grand/trees_fst/fst_stream.sh >$DIR/$OUT
 
 date
