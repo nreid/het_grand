@@ -679,22 +679,23 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 }
 
-if(length(outsam) == 0){cat(c(NA, NA, NA, NA, NA, NA),"\n",sep="\t",file="subpop.fst.txt")}
+if(length(outsam) > 0){
 
-if(dim(outsam)[1] < 30){cat(c(NA, NA, NA, NA, NA, NA),"\n",sep="\t",file="subpop.fst.txt")}
-
-fstout <- c()
-
-if(dim(outsam)[1] >= 30){
-
-	fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
-	fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,3],outsam[,3]))
-	fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,4],outsam[,4]))
-	fstout <- c(fstout, fstpi(outcounts[,2],outsam[,2],outcounts[,3],outsam[,3]))
-	fstout <- c(fstout, fstpi(outcounts[,2],outsam[,2],outcounts[,4],outsam[,4]))
-	fstout <- c(fstout, fstpi(outcounts[,3],outsam[,3],outcounts[,4],outsam[,4]))
-
-}
+	if(dim(outsam)[1] < 20){fstout <- c(NA,NA,NA,NA,NA,NA)}
+	
+	fstout <- c()
+	
+	if(dim(outsam)[1] >= 30){
+	
+		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
+		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,3],outsam[,3]))
+		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,4],outsam[,4]))
+		fstout <- c(fstout, fstpi(outcounts[,2],outsam[,2],outcounts[,3],outsam[,3]))
+		fstout <- c(fstout, fstpi(outcounts[,2],outsam[,2],outcounts[,4],outsam[,4]))
+		fstout <- c(fstout, fstpi(outcounts[,3],outsam[,3],outcounts[,4],outsam[,4]))
+	
+	}
+}else{fstout <- c(NA,NA,NA,NA,NA,NA)}
 
 cat(fstout,sep="\t",fill=TRUE)
 
