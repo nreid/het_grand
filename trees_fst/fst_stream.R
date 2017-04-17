@@ -682,11 +682,12 @@ while(length(line <- readLines(f,n=1)) > 0) {
 if(length(outsam) > 0){
 
 	fstout <- c()
-
-	if(dim(outsam)[1] < 20){fstout <- c(NA,NA,NA,NA,NA,NA)}
+	n <- dim(outsam)[1]
+	if(n < 20){fstout <- c(n,NA,NA,NA,NA,NA,NA)}
 	
 	if(dim(outsam)[1] >= 20){
-	
+		
+		fstout <- c(fstout, n)
 		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
 		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,3],outsam[,3]))
 		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,4],outsam[,4]))
@@ -695,7 +696,7 @@ if(length(outsam) > 0){
 		fstout <- c(fstout, fstpi(outcounts[,3],outsam[,3],outcounts[,4],outsam[,4]))
 	
 	}
-}else{fstout <- c(NA,NA,NA,NA,NA,NA)}
+}else{fstout <- c(0,NA,NA,NA,NA,NA,NA)}
 
 cat(fstout,sep="\t",fill=TRUE)
 
