@@ -683,9 +683,10 @@ if(length(outsam) > 0){
 
 	fstout <- c()
 	n <- dim(outsam)[1]
-	if(n < 20){fstout <- c(n,NA,NA,NA,NA,NA,NA)}
+	minmark <- 15
+	if(n < minmark){fstout <- c(n,NA,NA,NA,NA,NA,NA)}
 	
-	if(dim(outsam)[1] >= 20){
+	if(dim(outsam)[1] >= minmark){
 		
 		fstout <- c(fstout, n)
 		fstout <- c(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
