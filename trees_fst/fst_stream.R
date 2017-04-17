@@ -681,9 +681,9 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 if(length(outsam) > 0){
 
-	if(dim(outsam)[1] < 20){fstout <- c(NA,NA,NA,NA,NA,NA)}
-	
 	fstout <- c()
+
+	if(dim(outsam)[1] < 20){fstout <- c(NA,NA,NA,NA,NA,NA)}
 	
 	if(dim(outsam)[1] >= 20){
 	
