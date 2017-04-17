@@ -611,7 +611,7 @@ fstpi <- function(c1,n1,c2,n2){
 
 	pi1 <- sum( c1 * (n1 - c1) / choose(n1,2) )
 	pi2 <- sum( c2 * (n2 - c2) / choose(n2,2) )
-	pib <- sum( c1 * (n2 - c2) * c2 * (n1 - c1) / ( n1 * n2 ) )
+	pib <- sum( ((c1 * (n2 - c2)) + (c2 * (n1 - c1))) / ( n1 * n2 ) )
 
 	fst <- (pib - (0.5 * pi1 + 0.5 * pi2)) / pib
 
@@ -680,7 +680,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 }
 
 
-if(dim(outsam)[1] < 30){cat c(NA, NA, NA, NA, NA, NA,"\n",sep="\t"),file="subpop.fst.txt"}
+#if(dim(outsam)[1] < 30){cat(c(NA, NA, NA, NA, NA, NA),"\n",sep="\t",file="subpop.fst.txt")}
 
 fstout <- c()
 
@@ -695,5 +695,5 @@ if(dim(outsam)[1] >= 30){
 
 }
 
-cat(fstout,file="stdout")
+cat(fstout,sep="\t",fill=TRUE)
 
