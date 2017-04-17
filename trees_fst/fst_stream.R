@@ -680,7 +680,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 }
 
 
-#if(dim(outsam)[1] < 30){cat(c(NA, NA, NA, NA, NA, NA),"\n",sep="\t",file="subpop.fst.txt")}
+if(dim(outsam)[1] < 30){cat(c(NA, NA, NA, NA, NA, NA),"\n",sep="\t",file="subpop.fst.txt")}
 
 fstout <- c()
 
