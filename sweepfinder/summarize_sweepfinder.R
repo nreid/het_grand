@@ -119,7 +119,7 @@ intervals <- function(x, width=10000){
 			if(x[i,2] < 1){ x[i,2] <- 1 }
 			x[i,3] <- x[i,3] + buff
 			out <- c(out,paste(x[i,1],":",x[i,2],"-",x[i,3],collapse="",sep=""))
-		}
+		}else{ out <- c(out,paste(x[i,1],":",x[i,2],"-",x[i,3],collapse="",sep="")) }
 
 	}
 
@@ -128,8 +128,6 @@ intervals <- function(x, width=10000){
 
 # wherever your data are
 load("~/Dropbox/Public/sweepfinder.RData")
-
-fai2 <- fai[]
 
 colnames(sweep)[2] <- "pos"
 
@@ -148,17 +146,61 @@ wi <- mergesweeps(northwin,admixwin,southwin,grandwin)
 wi[rowSums(is.na(wi[,seq(4,11,2)]))==0,]
 
 # write out intervals to be analyzed
-# write.table(intervals(wi),file="het_grand_data/outlier_intervals10kb.txt",quote=FALSE,col.names=FALSE,row.names=FALSE)
+# write.table(intervals(wi,width=3000),file="het_grand_data/outlier_intervals3kb.txt",quote=FALSE,col.names=FALSE,row.names=FALSE)
+
+cnames <- c("count","north.south","north.admix","north.grand","south.admix","south.grand","admix.grand")
+fstnull <- read.table("het_grand_data/fst.null.out",stringsAsFactors=FALSE)
+colnames(fstnull) <- cnames
+fst10kb <- read.table("het_grand_data/fst.outlier.10kb.out",stringsAsFactors=FALSE)
+colnames(fst10kb) <- cnames
+fst3kb <- read.table("het_grand_data/fst.outlier.3kb.out",stringsAsFactors=FALSE)
+colnames(fst3kb) <- cnames
+
+# wi <- mergesweeps(
+# 	toppeaks(northwin,5,200),
+# 	toppeaks(admixwin,5,200),
+# 	toppeaks(southwin,5,200),
+# 	toppeaks(grandwin,5,200))
+
+# (!is.na(wi[,seq(4,11,2)])) %>% vennCounts() %>% vennDiagram()
+# wi[rowSums(is.na(wi[,seq(4,11,2)]))==0,]
+
+par(mfrow=c(1,2),mar=c(0,0,0,0),oma=c(3,3,1,1))
+noad <- !is.na(wi[,4]) & !is.na(wi[,6])
+boxplot(x=list(fst3kb[noad,"north.admix"],fstnull[,"north.admix"],fst3kb[noad,"north.south"],fstnull[,"north.south"],fst3kb[noad,"south.admix"],fstnull[,"south.admix"]),col=c("red","blue"))
+
+noad <- is.na(wi[,4]) & !is.na(wi[,6])
+boxplot(x=list(fst3kb[noad,"north.admix"],fstnull[,"north.admix"],fst3kb[noad,"north.south"],fstnull[,"north.south"],fst3kb[noad,"south.admix"],fstnull[,"south.admix"]),col=c("red","blue"))
+
+so <- !is.na(wi[,8]) & is.na(wi[,4]) & is.na(wi[,6])
+boxplot(x=list(fst3kb[so,"north.admix"],fstnull[,"north.admix"],fst3kb[so,"north.south"],fstnull[,"north.south"],fst3kb[so,"south.admix"],fstnull[,"south.admix"]),col=c("red","blue"))
 
 
-wi <- mergesweeps(
-	toppeaks(northwin,5,200),
-	toppeaks(admixwin,5,200),
-	toppeaks(southwin,5,200),
-	toppeaks(grandwin,5,200))
+noad <- !is.na(wi[,4]) & !is.na(wi[,6])
+hist(fst3kb[noad,3],freq=FALSE,breaks=br,col=rgb(0,0,1,.2),lty="blank",xlim=c(0,0.4))
+hist(fstnull[,3],freq=FALSE,breaks=br,col=rgb(1,0,0,.2),add=TRUE,lty="blank")
 
-(!is.na(wi[,seq(4,11,2)])) %>% vennCounts() %>% vennDiagram()
-wi[rowSums(is.na(wi[,seq(4,11,2)]))==0,]
+hist(fst3kb[noad,2],freq=FALSE,breaks=br,col=rgb(0,0,1,.2),lty="blank")
+hist(fstnull[,2],freq=FALSE,breaks=br,col=rgb(1,0,0,.2),add=TRUE,lty="blank")
+
+par(mfrow=c(1,2),mar=c(0,0,0,0),oma=c(3,3,1,1))
+noad <- !is.na(wi[,4]) & is.na(wi[,6])
+hist(fst3kb[noad,3],freq=FALSE,breaks=br,col=rgb(0,0,1,.2),lty="blank",xlim=c(0,0.4))
+hist(fstnull[,3],freq=FALSE,breaks=br,col=rgb(1,0,0,.2),add=TRUE,lty="blank")
+
+hist(fst3kb[noad,2],freq=FALSE,breaks=br,col=rgb(0,0,1,.2),lty="blank")
+hist(fstnull[,2],freq=FALSE,breaks=br,col=rgb(1,0,0,.2),add=TRUE,lty="blank")
+
+par(mfrow=c(1,2),mar=c(0,0,0,0),oma=c(3,3,1,1))
+noad <- is.na(wi[,4]) & !is.na(wi[,6])
+hist(fst3kb[noad,3],freq=FALSE,breaks=br,col=rgb(0,0,1,.2),lty="blank",xlim=c(0,0.4))
+hist(fstnull[,3],freq=FALSE,breaks=br,col=rgb(1,0,0,.2),add=TRUE,lty="blank")
+
+hist(fst3kb[noad,2],freq=FALSE,breaks=br,col=rgb(0,0,1,.2),lty="blank")
+hist(fstnull[,2],freq=FALSE,breaks=br,col=rgb(1,0,0,.2),add=TRUE,lty="blank")
+
+noad <- is.na(wi[,4]) & !is.na(wi[,6])
+
 
 
 vc <- cbind(
