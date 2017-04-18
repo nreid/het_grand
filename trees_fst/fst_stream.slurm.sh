@@ -10,9 +10,9 @@ module load r/3.2.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-INTERVAL=/scratch/nmr15102/sweepfinder/outlier_intervals3kb.txt
+INTERVAL=/scratch/nmr15102/sweepfinder/outlier_intervals10kb.txt
 DIR=/scratch/nmr15102/sweepfinder
-OUT=fst.outlier.3kb.out
+OUT=fst.outlier.10kb.out
 
 date
 
