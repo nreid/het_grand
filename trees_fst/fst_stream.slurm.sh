@@ -12,7 +12,7 @@ source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
 INTERVAL=/scratch/nmr15102/sweepfinder/outlier_intervals3kb.txt
 DIR=/scratch/nmr15102/sweepfinder
-OUT=fst.outlier.out
+OUT=fst.outlier.3kb.out
 
 date
 
