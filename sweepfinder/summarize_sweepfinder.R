@@ -5,34 +5,43 @@ library(stringr)
 library(limma)
 
 # a function to find selective sweep intervals and identify their peaks
-createintervals <- function(sw,CLR_col,alpha_col,thresh,mergedist=2001){
+createwindows <- function(sw,CLR_col,alpha_col,thresh,mergedist=2001){
 	
 	out <- c()
-	sw <- sw[sw[,CLR_col] > thresh,c("Scaffold","pos","pos","pos",CLR_col,alpha_col)]
+	sw <- sw[,c("Scaffold","pos","pos","pos",CLR_col,alpha_col)]
 	colnames(sw)[2:4] <- c("start","end","peak_loc")
-	out <- sw[1,]
+
+	keep <- which(sw[,CLR_col] > thresh)
+	out <- sw[keep[1],]
 
 	j <- 1
-	for(i in 2:dim(sw)[1]){
+	minheight <- 0.5 * out[1,5]
 
-		if( (sw[i,3]-out[j,3] < mergedist) & sw[i,1]==out[j,1] ){
+	for(i in keep[2]:dim(sw)[1]){
 
-			out[j,3] <- sw[i,3]
+		if(sw[i,CLR_col] > thresh){
 
-			if( out[j,5] < sw[i,5] ) {out[j,5] <- sw[i,5];out[j,4] <- sw[i,4]}
-
-			out[j,6] <- min(c(out[j,6],sw[i,6]))
-			}
-
+				if( (sw[i,3]-out[j,3] < mergedist) & sw[i,1]==out[j,1] & (sw[i,5] > minheight) ){
 		
-		if( (sw[i,3]-out[j,3] > mergedist) | sw[i,1]!=out[j,1] ){
-			out <- rbind(out,sw[i,])
-			j <- j + 1 
-			}
+					out[j,3] <- sw[i,3]
+		
+					if( out[j,5] < sw[i,5] ) {out[j,5] <- sw[i,5]; out[j,4] <- sw[i,4]}
+		
+					out[j,6] <- min(c(out[j,6],sw[i,6]))
+					minheight <- out[j,5] * 0.5
+					}
+		
+				
+				if( sw[i,1]!=out[j,1] | ((sw[i,3]-out[j,3] > mergedist) & (sw[i,5] > minheight) ) ){
+					out <- rbind(out,sw[i,])
+					j <- j + 1 
+					}
+			}else{ minheight <- thresh }
 
 		}
 	colnames(out)[2:3] <- c("start","end")
 	return(out)
+
 }
 
 # a function to identify co-localization of sweeps. 
@@ -64,10 +73,10 @@ mergesweeps <- function(win1,win2,win3,win4,buffer=20000){
 
 	for(k in 1:dim(out)[1]){
 
-		i1 <- win1[,1]==out[k,1] & win1[,3]>=out[k,2] & win1[,2]<out[k,3,]
-		i2 <- win2[,1]==out[k,1] & win2[,3]>=out[k,2] & win2[,2]<out[k,3,]
-		i3 <- win3[,1]==out[k,1] & win3[,3]>=out[k,2] & win3[,2]<out[k,3,]
-		i4 <- win4[,1]==out[k,1] & win4[,3]>=out[k,2] & win4[,2]<out[k,3,]
+		i1 <- win1[,1]==out[k,1] & win1[,4]>=out[k,2] & win1[,4]<=out[k,3,]
+		i2 <- win2[,1]==out[k,1] & win2[,4]>=out[k,2] & win2[,4]<=out[k,3,]
+		i3 <- win3[,1]==out[k,1] & win3[,4]>=out[k,2] & win3[,4]<=out[k,3,]
+		i4 <- win4[,1]==out[k,1] & win4[,4]>=out[k,2] & win4[,4]<=out[k,3,]
 
 		if( any(i1) ){ out[k,4:5]   <- c(max(win1[i1,5]),min(win1[i1,6])) }
 		if( any(i2) ){ out[k,6:7]   <- c(max(win2[i2,5]),min(win2[i2,6])) }
@@ -80,6 +89,42 @@ mergesweeps <- function(win1,win2,win3,win4,buffer=20000){
 
 }
 
+toppeaks <- function(win,col,n,inv=FALSE){
+
+	r <- rank(-win[,col])
+	if(inv) {r <- rank(win[,col]) }
+
+	win[r <= n,]
+
+}
+
+# convert alpha to approximate selection coefficient
+als <- function(alpha){
+
+	10^-8 * log(100000) / alpha
+
+}
+
+# create intervals for Fst calculation
+# x[,1]=scaffold,x[,2]=start,x[,3]=end
+intervals <- function(x, width=10000){
+
+	out <- c()
+	for(i in 1:dim(x)[1]){
+		
+		iwid <- x[i,3]-x[i,2]
+		if(iwid < width){
+			buff <- (width-iwid) / 2
+			x[i,2] <- x[i,2] - buff
+			if(x[i,2] < 1){ x[i,2] <- 1 }
+			x[i,3] <- x[i,3] + buff
+			out <- c(out,paste(x[i,1],":",x[i,2],"-",x[i,3],collapse="",sep=""))
+		}
+
+	}
+
+	return(out)
+}
 
 # wherever your data are
 load("~/Dropbox/Public/sweepfinder.RData")
@@ -102,6 +147,19 @@ wi <- mergesweeps(northwin,admixwin,southwin,grandwin)
 (!is.na(wi[,seq(4,11,2)])) %>% vennCounts() %>% vennDiagram()
 wi[rowSums(is.na(wi[,seq(4,11,2)]))==0,]
 
+# write out intervals to be analyzed
+# write.table(intervals(wi),file="het_grand_data/outlier_intervals10kb.txt",quote=FALSE,col.names=FALSE,row.names=FALSE)
+
+
+wi <- mergesweeps(
+	toppeaks(northwin,5,200),
+	toppeaks(admixwin,5,200),
+	toppeaks(southwin,5,200),
+	toppeaks(grandwin,5,200))
+
+(!is.na(wi[,seq(4,11,2)])) %>% vennCounts() %>% vennDiagram()
+wi[rowSums(is.na(wi[,seq(4,11,2)]))==0,]
+
 
 vc <- cbind(
 	North=as.numeric(sweepa[,"North_CLR"]>200),
@@ -121,14 +179,51 @@ vennDiagram(vc1)
 
 
 par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
-plot(sweepa[,"North_CLR"],pch=20,cex=.2,col=factor(sweepxy[,1]))
-abline(h=500)
-plot(sweepa[,"Admix_CLR"],pch=20,cex=.2,col=factor(sweepxy[,1]))
-abline(h=500)
-plot(sweepa[,"South_CLR"],pch=20,cex=.2,col=factor(sweepxy[,1]))
-abline(h=500)
-plot(sweepa[,"Grand_CLR"],pch=20,cex=.2,col=factor(sweepxy[,1]))
-abline(h=500)
+plot(sweepa[,"North_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+abline(h=200)
+plot(sweepa[,"Admix_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+abline(h=200)
+plot(sweepa[,"South_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+abline(h=200)
+plot(sweepa[,"Grand_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+abline(h=200)
+
+dev.new()
+yl=c(0,0.3)
+par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
+plot(als(sweepa[,"F_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]),ylim=yl)
+#abline(h=500)
+plot(als(sweepa[,"SH_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]),ylim=yl)
+#abline(h=500)
+plot(als(sweepa[,"KC_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]),ylim=yl)
+#abline(h=500)
+plot(als(sweepa[,"BB_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]),ylim=yl)
+#abline(h=500)
+
+dev.new()
+par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
+plot(als(sweepa[,"BB_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+plot(als(sweepa[,"VB_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+plot(als(sweepa[,"GB_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+plot(als(sweepa[,"BNP_alpha"]),pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+
+par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
+plot(sweepa[,"BB_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+plot(sweepa[,"VB_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+plot(sweepa[,"GB_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+plot(sweepa[,"BNP_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
+#abline(h=500)
+
+
+plot(sweepa[,"North_CLR"],1/sweepa[,"North_alpha"],pch=20,cex=.2,col=factor(sweepa[,1]))
+
 
 par(mfrow=c(1,1))
 plot(sweepa[,"BP_CLR"],sweepa[,"F_CLR"],pch=20,cex=.2,col=factor(sweepa[,1]))
@@ -148,17 +243,31 @@ abline(h=500)
 
 om[sweepa[sweepa[,"North_CLR"]>500,1] %>% table() %>% sort() %>% names(),]
 
-subc <- sweepa[,1]=="NW_012224652.1"
+scaf <- "NW_012234474.1"
+subc <- sweepa[,1]==scaf
 par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
-plot(sweepa[subc,2],sweepa[subc,"North_CLR"],pch=20,cex=.2)
+plot(sweepa[subc,2],sweepa[subc,"F_CLR"],pch=20,cex=.2,type="l")
+points(northwin[northwin[,1]==scaf,4],northwin[northwin[,1]==scaf,5],col="red")
 abline(h=200)
-plot(sweepa[subc,2],sweepa[subc,"Admix_CLR"],pch=20,cex=.2)
+plot(sweepa[subc,2],sweepa[subc,"BP_CLR"],pch=20,cex=.2,type="l")
+points(admixwin[admixwin[,1]==scaf,4],admixwin[admixwin[,1]==scaf,5],col="red")
 abline(h=200)
-plot(sweepa[subc,2],sweepa[subc,"South_CLR"],pch=20,cex=.2)
+plot(sweepa[subc,2],sweepa[subc,"GB_CLR"],pch=20,cex=.2,type="l")
+points(southwin[southwin[,1]==scaf,4],southwin[southwin[,1]==scaf,5],col="red")
 abline(h=100)
-plot(sweepa[subc,2],sweepa[subc,"Grand_CLR"],pch=20,cex=.2)
+plot(sweepa[subc,2],sweepa[subc,"BB_CLR"],pch=20,cex=.2,type="l")
+points(grandwin[grandwin[,1]==scaf,4],grandwin[grandwin[,1]==scaf,5],col="red")
 abline(h=100)
 
+par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
+plot(sweepa[subc,2],als((sweepa[subc,"SH_alpha"])),pch=20,cex=.2,type="l")
+abline(h=200)
+plot(sweepa[subc,2],als((sweepa[subc,"NYC_alpha"])),pch=20,cex=.2,type="l")
+abline(h=200)
+plot(sweepa[subc,2],als((sweepa[subc,"F_alpha"])),pch=20,cex=.2,type="l")
+abline(h=100)
+plot(sweepa[subc,2],als((sweepa[subc,"BP_alpha"])),pch=20,cex=.2,type="l")
+abline(h=100)
 
 
 par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
