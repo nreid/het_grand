@@ -593,7 +593,7 @@ cname <- c(
 	"BU000464.SJSP")
 
 
-
+options(scipen=99)
 # get vector of sample population names
 pop <- cname[10:585] %>% gsub("-.*","",.) %>% gsub(".*\\.","",.) %>% gsub("_.*","",.)
 popu <- unique(pop)
@@ -606,21 +606,32 @@ sss[grep("ER|KC",sss)] <- "South"
 sss[grep("GB|BB|SJSP|SP|BNP|PB|VB",sss)] <- "Grand"
 sssu <- unique(sss)
 
+# returns Fst
+# fstpi <- function(c1,n1,c2,n2){
 
+# 	pi1 <- ( c1 * (n1 - c1) / choose(n1,2) )
+# 	pi2 <- ( c2 * (n2 - c2) / choose(n2,2) )
+# 	pib <- ( ((c1 * (n2 - c2)) + (c2 * (n1 - c1))) / ( n1 * n2 ) )
+
+# 	fst <- (pib - (0.5 * pi1 + 0.5 * pi2)) / pib
+
+# 	return(fst)
+
+# 	}
+
+# returns numerator and denominator of fst
 fstpi <- function(c1,n1,c2,n2){
 
 	pi1 <- ( c1 * (n1 - c1) / choose(n1,2) )
 	pi2 <- ( c2 * (n2 - c2) / choose(n2,2) )
 	pib <- ( ((c1 * (n2 - c2)) + (c2 * (n1 - c1))) / ( n1 * n2 ) )
 
-	fst <- (pib - (0.5 * pi1 + 0.5 * pi2)) / pib
+	fst <- c((pib - (0.5 * pi1 + 0.5 * pi2)), pib)
 
 	return(fst)
 
 	}
 
-outcounts <- c()
-outsam <- c()
 
 # start proccessing data stream
 f <- file("stdin")
@@ -673,32 +684,16 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	minsam <- c(North=10,South=10,Admix=10,Grand=20)
 	if( any( sssam < minsam ) ){ next() }
 
-	outcounts <- rbind(outcounts, ssscounts)
-	outsam <- rbind(outsam,sssam)
+	fstout <- c()
+	fstout <- c(fstout, line[1], line[2])
+	fstout <- c(fstout, round(fstpi(ssscounts[1],sssam[1],ssscounts[2],sssam[2]),digits=5))
+	fstout <- c(fstout, round(fstpi(ssscounts[1],sssam[1],ssscounts[3],sssam[3]),digits=5))
+	fstout <- c(fstout, round(fstpi(ssscounts[1],sssam[1],ssscounts[4],sssam[4]),digits=5))
+	fstout <- c(fstout, round(fstpi(ssscounts[2],sssam[2],ssscounts[3],sssam[3]),digits=5))
+	fstout <- c(fstout, round(fstpi(ssscounts[2],sssam[2],ssscounts[4],sssam[4]),digits=5))
+	fstout <- c(fstout, round(fstpi(ssscounts[3],sssam[3],ssscounts[4],sssam[4]),digits=5))
 
-
+	#write.table(fstout,file="",sep="\t",col.names=FALSE,row.names=FALSE,quote=FALSE)
+	cat(paste(fstout,collapse="\t",sep=""),"\n",sep="")
 }
 
-if(length(outsam) > 0){
-
-	fstout <- c()
-	n <- dim(outsam)[1]
-	minmark <- 15
-	if(n < minmark){fstout <- c(n,NA,NA,NA,NA,NA,NA)}
-	
-	if(dim(outsam)[1] >= minmark){
-		
-		#fstout <- cbind(fstout, n)
-		fstout <- cbind(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
-		fstout <- cbind(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,3],outsam[,3]))
-		fstout <- cbind(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,4],outsam[,4]))
-		fstout <- cbind(fstout, fstpi(outcounts[,2],outsam[,2],outcounts[,3],outsam[,3]))
-		fstout <- cbind(fstout, fstpi(outcounts[,2],outsam[,2],outcounts[,4],outsam[,4]))
-		fstout <- cbind(fstout, fstpi(outcounts[,3],outsam[,3],outcounts[,4],outsam[,4]))
-	
-	}
-}else{fstout <- c(0,NA,NA,NA,NA,NA,NA)}
-
-cat(fstout,sep="\t",fill=TRUE)
-
-	
