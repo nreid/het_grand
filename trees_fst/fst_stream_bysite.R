@@ -688,7 +688,7 @@ if(length(outsam) > 0){
 	
 	if(dim(outsam)[1] >= minmark){
 		
-		fstout <- cbind(fstout, n)
+		#fstout <- cbind(fstout, n)
 		fstout <- cbind(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,2],outsam[,2]))
 		fstout <- cbind(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,3],outsam[,3]))
 		fstout <- cbind(fstout, fstpi(outcounts[,1],outsam[,1],outcounts[,4],outsam[,4]))
