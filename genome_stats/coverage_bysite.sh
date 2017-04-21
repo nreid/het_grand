@@ -16,7 +16,7 @@ OUTDIR=/scratch/nmr15102/genome_stats/evalsites
 HICOV=/scratch/nmr15102/variants/meta/hicov.merge.sort.bed
 
 
-$BAM merge -list meta/bams.list | \
+$BAM merge -list $1 | \
 $BAM filter -mapQuality ">30" -isProperPair true | \
 $BED intersect -v -a stdin -b $HICOV | \
 samtools depth -a /dev/stdin | \
