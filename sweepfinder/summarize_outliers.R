@@ -47,3 +47,6 @@ noad <- !is.na(wi[,4]) & !is.na(wi[,6]) & is.na(wi[,8]) & is.na(wi[,10])
 # what does Fst look like in those windows? 
 
 fst3kb[noad,-1] %>% boxplot()
+
+plot(tab[,2],smooth(tab[,3])/smooth(tab[,4]),pch=20,cex=.2)
+

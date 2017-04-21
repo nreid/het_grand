@@ -136,10 +136,10 @@ sweepxy <- sweep[sweep[,1] %in% xyscafs,]
 
 sweepa <- sweep[!(sweep[,1] %in% xyscafs),]
 
-northwin <- createwindows(sweepa,"North_CLR","North_alpha",200,20000)
-admixwin <- createwindows(sweepa,"Admix_CLR","Admix_alpha",200,20000)
-southwin <- createwindows(sweepa,"South_CLR","South_alpha",200,20000)
-grandwin <- createwindows(sweepa,"Grand_CLR","Grand_alpha",200,20000)
+northwin <- createwindows(sweepa,"North_CLR","North_alpha",50,10000)
+admixwin <- createwindows(sweepa,"Admix_CLR","Admix_alpha",50,10000)
+southwin <- createwindows(sweepa,"South_CLR","South_alpha",50,10000)
+grandwin <- createwindows(sweepa,"Grand_CLR","Grand_alpha",50,10000)
 
 wi <- mergesweeps(northwin,admixwin,southwin,grandwin)
 (!is.na(wi[,seq(4,11,2)])) %>% vennCounts() %>% vennDiagram()
@@ -285,19 +285,19 @@ abline(h=500)
 
 om[sweepa[sweepa[,"North_CLR"]>500,1] %>% table() %>% sort() %>% names(),]
 
-scaf <- "NW_012234474.1"
+scaf <- "NW_012224401.1"
 subc <- sweepa[,1]==scaf
 par(mfrow=c(4,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
-plot(sweepa[subc,2],sweepa[subc,"F_CLR"],pch=20,cex=.2,type="l")
+plot(sweepa[subc,2],sweepa[subc,"North_CLR"],pch=20,cex=.2,type="l")
 points(northwin[northwin[,1]==scaf,4],northwin[northwin[,1]==scaf,5],col="red")
 abline(h=200)
-plot(sweepa[subc,2],sweepa[subc,"BP_CLR"],pch=20,cex=.2,type="l")
+plot(sweepa[subc,2],sweepa[subc,"Admix_CLR"],pch=20,cex=.2,type="l")
 points(admixwin[admixwin[,1]==scaf,4],admixwin[admixwin[,1]==scaf,5],col="red")
 abline(h=200)
-plot(sweepa[subc,2],sweepa[subc,"GB_CLR"],pch=20,cex=.2,type="l")
+plot(sweepa[subc,2],sweepa[subc,"South_CLR"],pch=20,cex=.2,type="l")
 points(southwin[southwin[,1]==scaf,4],southwin[southwin[,1]==scaf,5],col="red")
 abline(h=100)
-plot(sweepa[subc,2],sweepa[subc,"BB_CLR"],pch=20,cex=.2,type="l")
+plot(sweepa[subc,2],sweepa[subc,"Grand_CLR"],pch=20,cex=.2,type="l")
 points(grandwin[grandwin[,1]==scaf,4],grandwin[grandwin[,1]==scaf,5],col="red")
 abline(h=100)
 
