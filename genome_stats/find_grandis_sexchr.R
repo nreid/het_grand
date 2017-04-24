@@ -625,6 +625,11 @@ p <- c()
 
 while(length(line <- readLines(f,n=1)) > 0) {
 
+	# skip comment lines
+	if(grepl("^#",line)){next()}
+
+	line <- str_split(line,"\\t") %>% unlist()
+
 	gt <- line[10:585]
 	gt <- as.numeric(gt)
 	gt <- gt[slist[[4]]]
