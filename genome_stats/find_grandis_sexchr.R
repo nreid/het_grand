@@ -609,7 +609,7 @@ slist <- list(
 	Grand=which(sss=="Grand")
 	)
 
-sexes <- read.table("all_sexes.txt",stringsAsFactors=FALSE)
+sexes <- read.table("~/het_grand/all_sexes.txt",stringsAsFactors=FALSE)
 rownames(sexes) <- sexes[,1]
 
 grandsex <- sexes[cname[10:585][slist[[4]]],3]
