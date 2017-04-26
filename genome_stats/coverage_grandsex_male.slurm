@@ -7,4 +7,4 @@ module load samtools/1.3
 
 LIST=/scratch/nmr15102/variants/meta/grand.male.list
 
-sh ~/het_grand/genome_stats/coverage_bysite.sh $LIST
+sh ~/het_grand/genome_stats/coverage_grandsex.sh $LIST
