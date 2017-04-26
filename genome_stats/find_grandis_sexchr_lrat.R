@@ -667,7 +667,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	keep <- !is.na(gt)
 	gs <- grandsex[keep]
 	gt <- gt[keep]
-	gt <- as.numeric(as.factor(tgt))-1
+	gt <- as.numeric(as.factor(gt))-1
 
 	# skip lines with > 2 alleles
 	if(length(table(gt))>2){next()}
