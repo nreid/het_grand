@@ -667,6 +667,10 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	keep <- !is.na(gt)
 	gs <- grandsex[keep]
 	gt <- gt[keep]
+	gt <- gt - min(gt)
+
+	# skip lines with > 2 alleles
+	if(length(table(gt))>2){next()}
 
 	#if((i %% 1000) == 0){print(i)}
 
