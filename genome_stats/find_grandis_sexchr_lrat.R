@@ -620,7 +620,7 @@ grandf <- slist[[4]][grandsex=="F"]
 
 lratxy <- function(it,gt){
 
-	mlf <- sum(gt)/s
+	mlf <- sum(gt)/length(it)
 	lnullf <- dbinom(x=sum(gt[it=="F"]),size=sum(it=="F"),prob=mlf,log=TRUE)
 	lnullm <- dbinom(x=sum(gt[it=="M"]),size=sum(it=="M"),prob=mlf,log=TRUE)
 	lfem <- max(dbinom(x=sum(gt[it=="F"]),size=sum(it=="F"),prob=c(0.03,0.97),log=TRUE))
@@ -633,7 +633,7 @@ lratxy <- function(it,gt){
 
 lratzw <- function(it,gt){
 
-	mlf <- sum(gt)/s
+	mlf <- sum(gt)/length(it)
 	lnullf <- dbinom(x=sum(gt[it=="F"]),size=sum(it=="F"),prob=mlf,log=TRUE)
 	lnullm <- dbinom(x=sum(gt[it=="M"]),size=sum(it=="M"),prob=mlf,log=TRUE)
 	lmal <- max(dbinom(x=sum(gt[it=="M"]),size=sum(it=="M"),prob=c(0.03,0.97),log=TRUE))
