@@ -27,9 +27,9 @@ echo $ofq2u
 $trimmo PE -threads 4 -phred33 $fq1 $fq2 $ofq1 $ofq1u $ofq2 $ofq2u ILLUMINACLIP:/home/nmr15102/bin/trimmomatic-0.36/NEBnextAdapt.fa:2:30:10 LEADING:5 TRAILING:5
 
 # set bwa output variables
-bamp=$(echo $ofq1 | sed 's/_R[12].*/.pt.bam/')
-bamu2=$(echo $ofq1u | sed 's/_R[12].*/.ut1.bam/')
-bamu1=$(echo $ofq1u | sed 's/_R[12].*/.ut2.bam/')
+bamp=$(echo $ofq1 | sed 's/.fastq.gz/.bam/' | sed 's/R[12]_//')
+bamu2=$(echo $ofq1u | sed 's/.ut.fastq.gz/.ut1.bam/' | sed 's/R[12]_//')
+bamu1=$(echo $ofq1u | sed 's/.ut.fastq.gz/.ut2.bam/' | sed 's/R[12]_//')
 
 # read group info
 run=$(echo $fq1 | grep -oP '(?<=tolerance_rnaseq/)[^/]+')
