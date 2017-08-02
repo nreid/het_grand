@@ -24,7 +24,7 @@ echo $ofq2
 echo $ofq2u
 
 # run trimmomatic
-$trimmo PE -threads 4 -phred33 $fq1 $fq2 $ofq1 $ofq1u $ofq2 $ofq2u ILLUMINACLIP:~/bin/trimmomatic-036/NEBnextAdapt.fa:2:30:10 LEADING:5 TRAILING:5
+$trimmo PE -threads 4 -phred33 $fq1 $fq2 $ofq1 $ofq1u $ofq2 $ofq2u ILLUMINACLIP:/home/nmr15102/bin/trimmomatic-0.36/NEBnextAdapt.fa:2:30:10 LEADING:5 TRAILING:5
 
 # set bwa output variables
 bamp=$(echo $ofq1 | sed 's/_R[12].*/.pt.bam/')
