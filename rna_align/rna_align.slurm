@@ -10,4 +10,4 @@ module load samtools/1.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel sh ~/het_grand/rna_align/rna_align.sh ::: $(find /scratch/nmr15102/tolerance_rnaseq/ -name "*fastq.gz")
+$parallel sh ~/het_grand/rna_align/rna_align.sh ::: $(find /scratch/nmr15102/tolerance_rnaseq/ -name "*fastq.gz" | grep R1)
