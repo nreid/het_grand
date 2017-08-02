@@ -1,7 +1,6 @@
 #!/bin/bash
-#SBATCH --ntasks 10
+#SBATCH --ntasks 20
 #SBATCH --cpus-per-task 2
-#SBATCH -N 1-1
 
 
 source /etc/profile.d/modules.sh
