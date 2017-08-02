@@ -28,7 +28,8 @@ $trimmo PE -threads 4 -phred33 $fq1 $fq2 $ofq1 $ofq1u $ofq2 $ofq2u ILLUMINACLIP:
 
 # set bwa output variables
 bamp=$(echo $ofq1 | sed 's/_R[12].*/.pt.bam/')
-bamu=$(echo $ofq1u | sed 's/_R[12].*/.ut.bam/')
+bamu2=$(echo $ofq1u | sed 's/_R[12].*/.ut1.bam/')
+bamu1=$(echo $ofq1u | sed 's/_R[12].*/.ut2.bam/')
 
 # read group info
 run=$(echo $fq1 | grep -oP '(?<=tolerance_rnaseq/)[^/]+')
@@ -43,7 +44,11 @@ rg=$(echo \@RG\\tID:$samp.$lib.$run.$lane.$sub\\tPL:Illumina\\tPU:x\\tLB:$lib\\t
 $BWA -R $rg $genome $ofq1 $ofq2 | \
 samtools sort -O bam -T $bamp.temp >$bamp
 
-$BWA -R $rg $genome $ofq1u $ofq2u | \
-samtools sort -O bam -T $bamu.temp >$bamu
+$BWA -R $rg $genome $ofq1u | \
+samtools sort -O bam -T $bamu1.temp >$bamu1
+
+$BWA -R $rg $genome $ofq2u | \
+samtools sort -O bam -T $bamu2.temp >$bamu2
+
 
 rm $ofq1 $ofq2 $ofq1u $ofq2u
