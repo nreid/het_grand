@@ -45,3 +45,5 @@ samtools sort -O bam -T $bamp.temp >$bamp
 
 $BWA -R $rg $genome $ofq1u $ofq2u | \
 samtools sort -O bam -T $bamu.temp >$bamu
+
+rm $ofq1 $ofq2 $ofq1u $ofq2u
