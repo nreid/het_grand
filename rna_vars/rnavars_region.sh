@@ -18,4 +18,3 @@ $FB -k -0 --min-coverage 750 --max-coverage 100000 \
 $VCFI -b $BED | \
 awk '$6 > 30' >$OUTDIR/$scaf.vcf
 
-gzip $OUTDIR/$scaf.vcf
