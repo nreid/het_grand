@@ -8,4 +8,4 @@ module load samtools/1.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel sh ~/het_grand/rna_vars/rnavars_region.sh ::: $(cat /scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.fai | cut -f 1)
+$parallel sh ~/het_grand/rna_vars/rnavars_region.sh ::: $(cat /scratch/nmr15102/tolerance_rnaseq/callregions/callregions.bed | cut -f 1 | uniq)
