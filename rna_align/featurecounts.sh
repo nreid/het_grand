@@ -11,4 +11,4 @@ $FC \
 -Q 30 \
 --primary \
 -p \
--a $ANN -o $OUT $LIST
+-a $ANN -o $OUT $(cat $LIST | tr "\n" " ")
