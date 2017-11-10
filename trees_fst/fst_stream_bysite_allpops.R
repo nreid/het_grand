@@ -686,7 +686,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	# if sample size doesn't equal at least vector, skip
 	minsam <- c(3,10,10,10,10,10,10,10,10,10,3,10,10)
 	samsize <- sapply(sgt,length)
-	cat(paste(samsize,collapse="\t",sep=""),"\n",sep="",file="samsize.allpops.txt")
+	cat(paste(samsize,collapse="\t",sep=""),"\n",sep="",file="samsize.allpops.txt",append=TRUE)
 	if(!all(samsize>=minsam)){next()}
 
 	# vector of alleles
