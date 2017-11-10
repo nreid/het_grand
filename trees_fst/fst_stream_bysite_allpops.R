@@ -684,9 +684,9 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	sgt <- lapply(slist,FUN=function(x,v){x <- v[x]; x[!is.na(x)]},v=gt)
 
 	# if sample size doesn't equal at least vector, skip
-	minsam <- c(3,10,10,10,10,10,10,10,10,10,3,10,10)
+	minsam <- c(3,3,5,5,5,3,5,5,3,5,3,3,3)
 	samsize <- sapply(sgt,length)
-	cat(paste(samsize,collapse="\t",sep=""),"\n",sep="",file="samsize.allpops.txt",append=TRUE)
+	#cat(paste(samsize,collapse="\t",sep=""),"\n",sep="",file="samsize.allpops.txt",append=TRUE)
 	if(!all(samsize>=minsam)){next()}
 
 	# vector of alleles
