@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-SCRIPT=~/het_grand/trees_fst/fst_dxy_bysite_allpops.R
+SCRIPT=~/het_grand/trees_fst/fst_stream_bysite_allpops.R
 
 TAB=~/bin/htslib/tabix
 BGZ=~/bin/htslib/bgzip
