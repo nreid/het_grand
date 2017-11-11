@@ -98,3 +98,5 @@ gts[gts[,4] > 0.25,3] <- 1
 gts[gts[,4] > 0.7,3] <- 0
 
 group_by(gts,pop) %>% summarize(.,mean(genotype)/2)
+
+table(gts[,2:3])
