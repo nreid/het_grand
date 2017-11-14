@@ -31,6 +31,7 @@ plot(dep[,2],rowSums(dep2),pch=20,cex=.2,ylim=c(0,300))
 plot(dep[,2],rowSums(dep2[,pop=="BB"]),pch=20,cex=.2,ylim=c(0,40))
 
 plot(dep[,2],rowSums(dep2[,pop=="VB"]),pch=20,cex=.2,ylim=c(0,50))
+	plot(dep[,2],rowSums(dep2[,pop=="VB"]),pch=20,cex=.2,ylim=c(0,50),xlim=c(630000,640000))
 
 plot(dep[,2],rowSums(dep2[,grep("VB|BB",pop)]),pch=20,cex=.2,ylim=c(0,40))
 
