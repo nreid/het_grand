@@ -15,4 +15,4 @@ zcat $COV | \
 Rscript $SCRIPT | \
 $BED intersect -v -a stdin -b $HICOV | \
 $BED map -a $WIN -b stdin -c 3 -o count | \
-$BGZ -c >popsites.1kb_win.bed
+$BGZ -c >popsites.1kb_win.bed.gz
