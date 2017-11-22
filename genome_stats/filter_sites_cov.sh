@@ -14,5 +14,5 @@ SCRIPT=~/het_grand/genome_stats/filter_sites_cov.R
 zcat $COV | \
 Rscript $SCRIPT | \
 $BED intersect -v -a stdin -b $HICOV | \
-$BED map -a stdin -b $WIN -c 3 -o count | \
+$BED map -a $WIN -b stdin -c 3 -o count | \
 $BGZ -c >popsites.1kb_win.bed
