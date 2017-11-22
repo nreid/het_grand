@@ -10,4 +10,4 @@ module load r/3.3.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel -a /scratch/nmr15102/fhet_genome/scaffolds.txt sh ~/het_grand/genome_stats/covpipe.sh
+$parallel -a /scratch/nmr15102/fhet_genome/scaffolds.txt sh ~/het_grand/genome_stats/covpipeline.sh
