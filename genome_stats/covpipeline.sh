@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-SCRIPT1=~/het_grand/genome_stats/popcount.R
-SCRIPT2=~/het_grand/genome_stats/mpile.sh
+SCRIPT1=~/het_grand/genome_stats/mpile.sh 
+SCRIPT2=~/het_grand/genome_stats/popcount.R
 
 TAB=~/bin/htslib/tabix
 BGZ=~/bin/htslib/bgzip
