@@ -7,6 +7,7 @@
 source /etc/profile.d/modules.sh 
 
 module load r/3.3.3
+module load samtools/1.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
