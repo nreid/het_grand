@@ -611,7 +611,7 @@ slist <- lapply(sort(popu), FUN=function(x){which(pop==x)})
 ad <- function(alseq){
 
 	# distance between alleles
-	ad <- adist(alseq,counts=TRUE)
+	ad <- adist(alseq,counts=TRUE,costs=c(ins=2,del=2,subs=1))
 
 	# inferred substitutions only, excluding indels
 	d <- attr(ad,"counts")[,,3]
