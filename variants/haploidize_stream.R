@@ -33,8 +33,9 @@ while(length(line <- readLines(f,n=1)) > 0) {
   if(grepl("^#",line)){write(line,stdout());next()}
 
   line <- str_split(line,"\\t") %>% unlist()
+  ncol <- length(line)
   nl <- nal(line[5])
-  line[10:585] <- sapply(line[10:585],sam,len=nl)
+  line[10:ncol] <- sapply(line[10:ncol],sam,len=nl)
   line <- paste(line,collapse="\t")
   write(line,stdout())
   # write(line, stderr())
