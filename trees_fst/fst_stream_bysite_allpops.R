@@ -678,7 +678,8 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	ind <- ind + 1
 
 	# genotype vector
-	gt <- as.numeric(line[10:585])+1
+	gt <- gsub(":.*","",line[10:585])
+	gt <- as.numeric(gt)+1
 	
 	# list of vectors of haploid genotypes per population
 	sgt <- lapply(slist,FUN=function(x,v){x <- v[x]; x[!is.na(x)]},v=gt)
