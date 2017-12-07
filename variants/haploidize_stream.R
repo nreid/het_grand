@@ -13,7 +13,7 @@ library(magrittr)
 		}
 
 	sam<-function(x,len){
-		if(x=="."){return(".")}
+		if(grepl("^\\.",x)){return(".")}
 
 		x <- str_split(x,":")[[1]][3] %>% 
 			str_split(.,",") %>% 
