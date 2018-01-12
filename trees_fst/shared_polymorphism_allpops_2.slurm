@@ -10,4 +10,4 @@ module load r/3.3.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel -a /scratch/nmr15102/variants/last_scaffolds.txt sh ~/het_grand/trees_fst/fst_dxy_bysite_allpops.sh
+$parallel -a /scratch/nmr15102/variants/last_scaffolds.txt sh ~/het_grand/trees_fst/shared_polymorphism_allpops.sh
