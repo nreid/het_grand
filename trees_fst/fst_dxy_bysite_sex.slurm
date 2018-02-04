@@ -10,4 +10,4 @@ module load r/3.3.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel -a /scratch/nmr15102/fhet_genome/xy_scaffolds.txt sh ~/het_grand/trees_fst/fst_dxy_bysite_sex.sh
+$parallel -a /home/nmr15102/fhet_genome/intervals_1mb.txt sh ~/het_grand/trees_fst/fst_dxy_bysite_sex.sh

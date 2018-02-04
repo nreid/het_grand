@@ -593,6 +593,7 @@ options(scipen=99)
 # get vector of sample population names
 pop <- cname[10:585] %>% gsub("-.*","",.) %>% gsub(".*\\.","",.) %>% gsub("_.*","",.)
 popu <- unique(pop)
+popu <- sort(popu)
 
 # get vector of north,admixed,south,grandis designations
 sss <- pop
@@ -615,6 +616,8 @@ slist <- list(
 	GrandM=which(sss=="Grand"&sexes[cname[10:585],3]=="M"),
 	GrandF=which(sss=="Grand"&sexes[cname[10:585],3]=="F")
 	)
+
+poplist <- lapply(sort(popu), FUN=function(x){which(pop==x)})
 
 # need to calculate pi from short haplotypes. 
 # function "adist" can calculate ins,del,subs in pairwise fashion
@@ -698,18 +701,18 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	ind <- ind + 1
 
 	# genotype vector
-	gt <- as.numeric(line[10:585])+1
+	gt <- gsub(":.*","",line[10:585])
+	gt <- as.numeric(gt)+1
 	
 	# list of vectors of haploid genotypes per population
 	sgt <- lapply(slist,FUN=function(x,v){x <- v[x]; x[!is.na(x)]},v=gt)
+	popgt <- lapply(poplist,FUN=function(x,v){x <- v[x]; x[!is.na(x)]},v=gt)
 
 	# if sample size doesn't equal at least vector, skip
-	minsam <- c(2,2,2,2,2,2,2,2)
-	minsam2 <- c(10,10,10,20)
-	sam <- sapply(sgt,length)
-	sam2 <- c(sam[1]+sam[2],sam[3]+sam[4],sam[5]+sam[6],sam[7]+sam[8])
-	minl <- c(sam,sam2) >= c(minsam,minsam2)
-	if(!all(minl)){next()}
+	minsam <- c(3,3,5,5,5,3,5,5,3,5,3,3,3)
+	samsize <- sapply(popgt,length)
+
+	if(!all(samsize>=minsam)){next()}
 
 	# vector of alleles
 	alleles <- c(line[4],unlist(str_split(line[5],",")))
