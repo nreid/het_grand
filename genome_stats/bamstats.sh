@@ -5,6 +5,6 @@ source /etc/profile.d/modules.sh
 
 module load samtools/1.3
 
-for file in $(cat bams.list)
+for file in $(cat /scratch/nmr15102/variants/meta/bams.list)
 do samtools stats $file | gzip -c >$file.stats
 done
