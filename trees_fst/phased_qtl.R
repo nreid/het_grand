@@ -113,7 +113,7 @@ chis <- function(som,ki=NULL){
 	somm4 <- read.phased.somm("SOMM088.beagle.vcf.gz")
 
 # more metadata
-	somm <- read.table("Library.SOMM.table.txt",stringsAsFactors=FALSE,header=TRUE)
+	somm <- read.table("~/Downloads/Library.SOMM.table.txt",stringsAsFactors=FALSE,header=TRUE)
 	pmat <- data.frame(sam=somm$library_sample,phen=somm$Phenotype,dphen=as.numeric(somm$Phenotype > 2),pop=somm$pop,stringsAsFactors=FALSE)
 	rownames(pmat) <- somm$library_sample
 
@@ -622,5 +622,292 @@ get_scafs <- function(chr,start,end){
 	data.frame(NW_scaf=unique(scafs[,1]),old_scaf=om2[unique(scafs[,1]),1],counts=as.vector(table(scafs[,1])))
 
 	}
+
+
+
+fai <- read.table("~/projects/het_grand_data/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.fai",stringsAsFactors=FALSE)
+
+revc <- function(x){
+
+	x <- str_split(x,"")
+	x <- sapply(x,FUN=function(y){
+		trans <- c(A="T",C="G",G="C",T="A")
+		y <- trans[y] %>% rev() %>% paste(.,sep="",collapse="")
+		y 
+		})
+	x
+
+}
+
+# check against pop gen data. 
+
+# AIP NW_012234293.1.vcf.gz
+	# orientation is opposite to map assembly
+	# 
+
+	scaflen <- fai[fai[,1]=="NW_012234293.1",2]
+	offset <- lift[win[,1]=="NW_012234293.1",2] %>% range()
+	
+	hnames <- scan("~/projects/het_grand/vcf_header.txt",what="character",sep="\t")
+	vcf <- read.table("~/projects/het_grand_data/NW_012234293.1.vcf.gz",stringsAsFactors=FALSE)
+	colnames(vcf) <- hnames
+	vcf <- vcf[!grepl(",",vcf[,5]),]
+	vcf[,1] <- "chr2"
+	# renumber variants
+	vcf[,2] <- vcf[,2] + nchar(vcf[,4]) - 1
+	vcf[,2] <- -1 * (vcf[,2] - scaflen - 1) + offset[1]
+	vcf[,4] <- revc(vcf[,4])
+	vcf[,5] <- revc(vcf[,5])
+	vcf <- vcf[order(vcf[,2]),]
+	
+	pgt <- as.matrix(vcf[,10:297])
+		class(pgt) <- "numeric"
+
+
+	## SOMM1 NBH
+	ind1 <- somm1$vcf[,1]=="chr2" & somm1$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm1$vcf[somm1$vcf[,1]=="chr2",2]
+
+	gm <- somm1$hap[ind1,]
+	gmg <- somm1$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+
+	ntol <- grep("BP|NYC",pop)
+	nsen <- grep("F|SH",pop)
+
+	fdif <- (rowMeans(gp[,ntol],na.rm=TRUE) - rowMeans(gp[,nsen],na.rm=TRUE))	
+	stat <- colMeans(gmg[fdif > 0.25,]/2)
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:60,14),]/2)
+
+	plot(stat)
+	text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	stat <- colMeans(gm[fdif > 0.25,])
+	# randomize to check
+		stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm1$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"])
+
+	# SOMM2 NYC: AIP haplotype maybe homozygous in cross. 
+	ind1 <- somm2$vcf[,1]=="chr2" & somm2$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm2$vcf[somm2$vcf[,1]=="chr2",2]
+
+	gm <- somm2$hap[ind1,]
+	gmg <- somm2$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+
+	ntol <- grep("BP|NYC",pop)
+	nsen <- grep("F|SH",pop)
+
+	fdif <- (rowMeans(gp[,ntol],na.rm=TRUE) - rowMeans(gp[,nsen],na.rm=TRUE))	
+	stat <- colMeans(gmg[fdif > 0.25,]/2)
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:81,24),]/2)
+
+	plot(stat)
+	text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	mean(colMeans(gmg[,stat>0.8]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(.,pch=20,col=ind2+1)
+
+	mds <- t(somm2$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"])
+
+
+	# SOMM3 BP: AIP haplotype probably homozygous in cross. 
+	ind1 <- somm3$vcf[,1]=="chr2" & somm3$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm3$vcf[somm3$vcf[,1]=="chr2",2]
+
+	gm <- somm3$hap[ind1,]
+	gmg <- somm3$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+
+	ntol <- grep("BP|NYC",pop)
+	nsen <- grep("F|SH",pop)
+
+	fdif <- (rowMeans(gp[,ntol],na.rm=TRUE) - rowMeans(gp[,nsen],na.rm=TRUE))	
+	stat <- colMeans(gmg[fdif > 0.25,]/2)
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:101,24),]/2)
+
+	plot(stat)
+	text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	mean(colMeans(gmg[,stat>0.8]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	stat <- colMeans(gm[fdif > 0.25,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(.,pch=20,col=ind2+1)
+
+	mds <- t(somm3$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"])
+
+
+	# SOMM4 ER: AIP haplotype not likely homozygous in cross. 
+	# high heterozygosity in ER/ER chromosme cluster
+	ind1 <- somm4$vcf[,1]=="chr2" & somm4$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm4$vcf[somm4$vcf[,1]=="chr2",2]
+
+	gm <- somm4$hap[ind1,]
+	gmg <- somm4$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+
+	ntol <- grep("ER",pop)
+	nsen <- grep("KC",pop)
+
+	fdif <- (rowMeans(gp[,ntol],na.rm=TRUE) - rowMeans(gp[,nsen],na.rm=TRUE))	
+	stat <- colMeans(gmg[fdif > 0.5,]/2)
+	# randomize to check
+		stat <- colMeans(gmg[sample(1:107,15),]/2)
+
+	plot(stat,ylim=c(0,1))
+	text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	mean(colMeans(gmg[,stat<0.2]==1))
+
+	#		plot(colMeans(gmg)/2,colMeans(gmg==1))
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+
+	stat <- colMeans(gm[fdif > 0.5,])
+	# randomize to check
+		stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+	
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(.,pch=20,col=ind2+1)
+
+	mds <- t(somm4$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"])
+
+
+# AHR NW_012234474.1.vcf.gz
+	# orientation same as map assembly
+	# 
+
+	scaflen <- fai[fai[,1]=="NW_012234474.1",2]
+	offset <- lift[win[,1]=="NW_012234474.1",2] %>% range()
+	
+	hnames <- scan("~/projects/het_grand/vcf_header.txt",what="character",sep="\t")
+	vcf <- read.table("~/projects/het_grand_data/NW_012234474.1.vcf.gz",stringsAsFactors=FALSE)
+	colnames(vcf) <- hnames
+	vcf <- vcf[!grepl(",",vcf[,5]),]
+	vcf[,1] <- "chr1"
+	# renumber variants
+	vcf[,2] <- vcf[,2]+offset[1]
+	
+	pgt <- as.matrix(vcf[,10:297])
+		class(pgt) <- "numeric"
+
+
+
+# SOMM4 ER:
+	# Not enough information to clear this up. 
+
+	del <- read.table("~/projects/het_grand/heteroclitus_del_gt.txt",stringsAsFactors=FALSE)
+	erdel <- del[del[,4]=="ER" & del[,2]==0,1]
+
+	ind1 <- somm4$vcf[,1]=="chr2" & somm4$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm4$vcf[somm4$vcf[,1]=="chr2",2]
+
+	gm <- somm4$hap[ind1,]
+	gmg <- somm4$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+
+	ntol <- which(colnames(gp) %in% erdel)
+	nsen <- grep("KC",pop)
+
+	fdif <- (rowMeans(gp[,ntol],na.rm=TRUE) - rowMeans(gp[,nsen],na.rm=TRUE))	
+	stat <- colMeans(gmg[which(fdif > 0.25),]/2)
+	# randomize to check
+		stat <- colMeans(gmg[sample(1:107,15),]/2)
+
+	plot(stat,ylim=c(0,1))
+	text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	mean(colMeans(gmg[,stat<0.2]==1))
+
+#	plot(colMeans(gmg)/2,colMeans(gmg==1))
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+
+	stat <- colMeans(gm[fdif > 0.5,])
+	# randomize to check
+		stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+	
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm4$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"])
+
+
+# 
+
+
+
 
 
