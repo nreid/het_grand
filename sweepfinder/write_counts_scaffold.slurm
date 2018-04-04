@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --ntasks 60
+#SBATCH --ntasks 20
 #SBATCH --cpus-per-task 1
 
 
