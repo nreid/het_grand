@@ -13,6 +13,6 @@ source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
 date
 
-$parallel -a ~/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.fai.10kbmin sh ~/het_grand/sweepfinder/write_counts_scaffold.sh
+$parallel -a ~/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.fai.10kbmin sh ~/het_grand/sweepfinder/write_counts_stream.sh
 
 date
