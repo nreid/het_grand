@@ -612,7 +612,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 	if(ind==1){
 
 		outname <- paste(c(line[1],"counts"),collapse="_")
-		cat(paste(c("scaf","start"."end", popv),collapse="\t"),"\n",sep="",file=outname)	
+		cat(paste(c("scaf","start","end", popv),collapse="\t"),"\n",sep="",file=outname)	
 		}
 
 	
@@ -632,7 +632,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 
 
-	out <- c(line[1],line[2]-1,line[2],popcounts)
+	out <- c(line[1],as.numeric(line[2])-1,line[2],popcounts)
  	cat(paste(out,collapse="\t"),"\n",sep="",file=outname,append=TRUE)
 
 
