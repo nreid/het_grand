@@ -14,5 +14,6 @@ VCF=/scratch/nmr15102/variants/hetgrand.hap.vcf.gz
 for num in {1..18873}
 do win=$(sed -n $(echo $num)p /home/nmr15102/fhet_genome/100kb_win.bed)
 reg=$(echo $win | sed 's/ /:/' | sed 's/ /-/')
-$TAB $VCF $reg | Rscript ~/het_grand/trees_fst/ghd_stream.R
+tre=$(echo $win | sed 's/ /	/g')
+$TAB $VCF $reg | Rscript ~/het_grand/trees_fst/ghd_stream.R | sed "s/^/$tre	/"
 done
