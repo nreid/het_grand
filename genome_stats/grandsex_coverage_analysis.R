@@ -5,6 +5,19 @@ library(magrittr)
 # that seem to be associated with sex, although not absolutely 
 # determinative of it. 
 
+smother <- function(x,winsize){
+	
+	vec <- 1:length(x)
+	start <- vec - winsize; start[start < 1] <- 1
+	end <- vec + winsize; end[end > length(x)] <- length(x)
+	win <- cbind(start,end)
+	out <- apply(win, MAR=1,FUN=function(z){sum(x[z[1]:z[2]],na.rm=TRUE)})
+	return(out)
+
+}
+
+
+
 cname <- c(
 	"CHROM",
 	"POS",
@@ -592,6 +605,12 @@ cname <- c(
 	"BU000463.SJSP",
 	"BU000464.SJSP")
 
+
+
+lift <- read.table("fst_dxy_allpops_liftover.txt",stringsAsFactors=FALSE)
+lord <- order(lift[,1],lift[,2])
+lift <- lift[lord,]
+
 # coverage in 1kb windows
 gsex <- read.table("grand.sex.coverage.bed",stringsAsFactors=FALSE)
 gsex[,5] <- as.numeric(gsex[,5])
@@ -600,26 +619,40 @@ gsex[,7] <- as.numeric(gsex[,7])
 gsex[,5] <- gsex[,5]/gsex[,4]
 gsex[,7] <- gsex[,7]/gsex[,6]
 
+gsex <- gsex[lord,]
+
+
 # window subset
-subw <- (gsex[,5]+gsex[,7] < 500 & gsex[,5]+gsex[,7] > 8)
+subw <- (gsex[,5]+gsex[,7] < 1000 & gsex[,5]+gsex[,7] > 8)
+subw <- (gsex[,4] > 400 | gsex[,6] > 400) & gsex[,5]+gsex[,7] > 30
+
+# average windows
+gsex2 <- gsex
+gsex2[which(subw),5] <- smother(gsex2[which(subw),5],2)
+gsex2[which(subw),7] <- smother(gsex2[which(subw),7],2)
+
+
 
 # get median coverages
 medrat <- median(log(gsex[subw,7]/gsex[subw,5],base=2),na.rm=TRUE)
 medf <- median(log(gsex[subw,7],base=2),na.rm=TRUE)
 medm <- median(log(gsex[subw,5],base=2),na.rm=TRUE)
 
+medrat2 <- median(log(gsex2[subw,7]/gsex2[subw,5],base=2),na.rm=TRUE)
+
+
 # plot F/M coverage ratios, adding median coverage to each in the second plot to tamp down noise
 par(mfrow=c(2,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
 
-plot(log(gsex[subw,7]/gsex[subw,5],base=2)-medrat,pch=20,cex=.2,col=factor(gsex[subw,1]),ylim=c(-3,3))
-plot(log((gsex[subw,7]+58.7)/(gsex[subw,5]+52.8),base=2)-medrat,pch=20,cex=.2,col=factor(gsex[subw,1]),ylim=c(-3,3))
+plot(log(gsex[subw,7]/gsex[subw,5],base=2)-medrat,pch=20,cex=.2,col=factor(lift[subw,1]),ylim=c(-3,3))
+plot(log((gsex[subw,7]+58.7)/(gsex[subw,5]+52.8),base=2)-medrat,pch=20,cex=.2,col=factor(lift[subw,1]),ylim=c(-3,3))
 
 ratvec <- log(gsex[,7]/gsex[,5],base=2)-medrat
 gsex[ratvec < -0.5 & subw,1] %>% table() %>% sort()
 gsex[ratvec > 0.5 & subw,1] %>% table() %>% sort()
 
-ratvec <- log((gsex[,7]+58.7)/(gsex[,5]+52.8),base=2)-medrat
-gsex[ratvec < -0.25 & subw,1] %>% table() %>% sort()
+ratvec <- log((gsex2[,7]+58.7)/(gsex2[,5]+52.8),base=2)-medrat2
+gsex2[ratvec < -0.25 & subw,1] %>% table() %>% sort()
 
 # "NW_012234400.1" promising scaffold. 
 	# both sexes have higher coverage
@@ -653,6 +686,21 @@ points(gsex[subc,2],log(gsex[subc,7],base=2)-medf,pch=20,col="red")
 
 plot(gsex[subc,2],2^(log(gsex[subc,5],base=2)-medm),pch=20,ylim=c(0,4))
 points(gsex[subc,2],2^(log(gsex[subc,7],base=2)-medf),pch=20,col="red")
+
+# AMH
+subc <- gsex[,1]=="NW_012234285.1"
+par(mfrow=c(2,1),mar=c(0,0,0,0),oma=c(3,3,1,1))
+plot(gsex[subc,2],gsex[subc,5],pch=20,xlim=c(100000,200000))
+points(gsex[subc,2],gsex[subc,7],pch=20,col="red")
+plot(gsex[subc,2],log(gsex[subc,7]/gsex[subc,5],base=2)-medrat,pch=20,ylim=c(-1,1),xlim=c(100000,200000),ylab="male/female log2 fold coverage")
+
+plot(gsex[subc,2],log(gsex[subc,5],base=2)-medm,pch=20,xlim=c(100000,200000),ylim=c(-0.5,2.5))
+points(gsex[subc,2],log(gsex[subc,7],base=2)-medf,pch=20,col="red")
+
+plot(gsex[subc,2],2^(log(gsex[subc,5],base=2)-medm),pch=20,xlim=c(100000,200000),ylim=c(0,4))
+points(gsex[subc,2],2^(log(gsex[subc,7],base=2)-medf),pch=20,col="red")
+
+
 
 
 # read in a table of sex-sample associations
@@ -737,10 +785,57 @@ points(jitter(rep(2,sum(sex[colnames(dep2),4]=="M")),amount=.05),(mein/meout)[se
 
 wilcox.test(mein/meout ~ sex[colnames(dep2),4])
 
-me1 <- me1[names(me1) %in% names(me2)]
-me2 <- me2[names(me2) %in% names(me1)]
+
+# read in a table of depth per site per sample. AMH!!!
+dep <- read.table("NW_012234285.1:140000-180000.depth.gz",stringsAsFactors=FALSE)
+colnames(dep) <- c("scaffold","position",cname[grep("BU",cname)])
+
+# throw out individuals with very low coverage
+dep2 <- dep[,-c(1,2)]
+dep2 <- dep2[,colSums(dep2)/dim(dep2)[1] > 0.3]
+
+# get male and female column IDs
+male <- sex[colnames(dep2),4] == "M"
+female <- sex[colnames(dep2),4] == "F"
+
+plot(dep[,2],rowSums(dep2),pch=20,cex=.2)
+
+plot(dep[,2],rowSums(dep2[,male]),pch=20,cex=.2,xlim=c(155000,170000))
+points(dep[,2],rowSums(dep2[,female]),pch=20,cex=.2,col=rgb(1,0,0,.2))
+
+plot(dep[,2],rowSums(dep2[,male])-rowSums(dep2[,female]),pch=20,cex=.2,xlim=c(155000,170000))
+
+
+subin <- (dep[,2] > 160000 & dep[,2] < 161400) | (dep[,2] > 78000 & dep[,2] < 80000) 
+subout <- ((dep[,2] < 150000 | dep[,2] > 159000))
+
+mein <- apply(dep2[subin,],MAR=2,FUN=mean)
+meout <- apply(dep2[subout,],MAR=2,FUN=mean)
+
+me3 <- mein/meout
+names(me3) <- colnames(dep2)
+
+plot(mein/meout,col=(sex[colnames(dep2),4]=="M")+1,pch=20)
+
+boxplot(mein/meout ~ sex[colnames(dep2),4],ylab="Fold change coverage over adjacent region",notch=TRUE)
+points(jitter(rep(1,sum(sex[colnames(dep2),4]=="F")),amount=.05),(mein/meout)[sex[colnames(dep2),4]=="F"],pch=20,cex=1,col=rgb(0,0,0,.3))
+points(jitter(rep(2,sum(sex[colnames(dep2),4]=="M")),amount=.05),(mein/meout)[sex[colnames(dep2),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
+
+wilcox.test(mein/meout ~ sex[colnames(dep2),4])
+
+
+
+
+
+u <- intersect(names(me1),names(me2)) %>% intersect(.,names(me3))
+
+me1 <- me1[u]
+me2 <- me2[u]
+me3 <- me3[u]
 
 plot(me1,me2,col=(sex[names(me1),4]=="F")+1,pch=20,ylab="fold coverage over expected, NW_012234400",xlab="fold coverage over expected, NW_012224610")
+abline(0,1)
+plot(me1,me3,col=(sex[names(me1),4]=="F")+1,pch=20,ylab="fold coverage over expected, NW_012234400",xlab="fold coverage over expected, NW_012224610")
 abline(0,1)
 # both scaffolds are on different heteroclitus linkage groups: 
 
@@ -749,10 +844,15 @@ points(jitter(rep(1,sum(sex[names(me1),4]=="F")),amount=.05),(me1)[sex[names(me1
 points(jitter(rep(2,sum(sex[names(me1),4]=="M")),amount=.05),(me1)[sex[names(me1),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
 
 boxplot(me2 ~ sex[names(me2),4],ylab="Fold change coverage over adjacent region",notch=TRUE,ylim=c(0,5))
-points(jitter(rep(1,sum(sex[names(me2),4]=="F")),amount=.05),(me1)[sex[names(me2),4]=="F"],pch=20,cex=1,col=rgb(0,0,0,.3))
-points(jitter(rep(2,sum(sex[names(me2),4]=="M")),amount=.05),(me1)[sex[names(me2),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
+points(jitter(rep(1,sum(sex[names(me2),4]=="F")),amount=.05),(me2)[sex[names(me2),4]=="F"],pch=20,cex=1,col=rgb(0,0,0,.3))
+points(jitter(rep(2,sum(sex[names(me2),4]=="M")),amount=.05),(me2)[sex[names(me2),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
 
-me3 <- me1+me2
-boxplot(me3 ~ sex[names(me1),4],ylab="Fold change coverage over adjacent region",notch=TRUE,ylim=c(0,10))
-points(jitter(rep(1,sum(sex[names(me1),4]=="F")),amount=.05),(me3)[sex[names(me1),4]=="F"],pch=20,cex=1,col=rgb(0,0,0,.3))
-points(jitter(rep(2,sum(sex[names(me1),4]=="M")),amount=.05),(me3)[sex[names(me1),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
+boxplot(me3 ~ sex[names(me3),4],ylab="Fold change coverage over adjacent region",notch=TRUE,ylim=c(0,10))
+points(jitter(rep(1,sum(sex[names(me3),4]=="F")),amount=.05),(me3)[sex[names(me3),4]=="F"],pch=20,cex=1,col=rgb(0,0,0,.3))
+points(jitter(rep(2,sum(sex[names(me3),4]=="M")),amount=.05),(me3)[sex[names(me3),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
+
+
+me4 <- me1+me2+me3
+boxplot(me3 ~ sex[names(me3),4],ylab="Fold change coverage over adjacent region",notch=TRUE,ylim=c(0,10))
+points(jitter(rep(1,sum(sex[names(me3),4]=="F")),amount=.05),(me3)[sex[names(me3),4]=="F"],pch=20,cex=1,col=rgb(0,0,0,.3))
+points(jitter(rep(2,sum(sex[names(me3),4]=="M")),amount=.05),(me3)[sex[names(me3),4]=="M"],pch=20,cex=1,col=rgb(0,0,0,.3))
