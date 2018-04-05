@@ -8,4 +8,4 @@ source /etc/profile.d/modules.sh
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel -a chr_in.txst sh ~/het_grand/sweepfinder/run_sweepfinder_2.sh
+$parallel -a chr_in.txt sh ~/het_grand/sweepfinder/run_sweepfinder_2.sh
