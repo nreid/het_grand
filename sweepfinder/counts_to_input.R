@@ -4,14 +4,13 @@ library(dplyr)
 # module load r/3.3.3
 
 chr <- list.files("/scratch/nmr15102/sweepfinder/counts",pattern="^chr.*gz",full.names=TRUE)
+ugh <- read.table("~/fhet_genome/fst_dxy_allpops_liftover.txt", stringsAsFactors=FALSE)
 
 for(k in 1:length(chr)){
 
 # genomic windows to use for grid location selection
-win <- read.table("~/fhet_genome/1kb_win.bed", stringsAsFactors=FALSE)
-lift <- read.table("~/fhet_genome/fst_dxy_allpops_liftover.txt", stringsAsFactors=FALSE)
+lift <- ugh
 lord <- order(lift[,1],lift[,2])
-win <- win[lord,]
 lift <- lift[lord,]
 
 # read in a chromosome
