@@ -592,6 +592,7 @@ cname <- c(
 "BU000463.SJSP",
 "BU000464.SJSP")
 
+options(scipen=99)
 
 
 # get vector of sample population names
