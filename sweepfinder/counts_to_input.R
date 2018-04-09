@@ -1,4 +1,5 @@
 library(dplyr)
+library(readr)
 
 # srun -J interactive --pty bash
 # module load r/3.3.3
@@ -14,7 +15,10 @@ lord <- order(lift[,1],lift[,2])
 lift <- lift[lord,]
 
 # read in a chromosome
-tab <- read.table(chr[k],stringsAsFactors=FALSE)
+
+tab <- read_tsv(chr[k],col_names=FALSE,progress=FALSE)
+tab <- as.data.frame(tab,stringsAsFactors=FALSE)
+
 tab <- tab[order(tab[,2]),]
 
 # make sure first and last variant in each dataset is the same. 
@@ -66,6 +70,10 @@ for(i in het){
 	s1 <- s1[ss,]
 	s1 <- cbind(s1,folded=0)
 	colnames(s1) <- c("position","x","n","folded")
+	
+	# skip every 4th SNP to save computation time. 
+	keep <- c(seq(1,dim(s1)[1]-1,4),dim(s1)[1])
+
 	rec1 <- cbind(pos=s1[,1],rate=(s1[,1]-s1[1,1])/1e6)
 	
 	# file names
@@ -73,7 +81,7 @@ for(i in het){
 	# rfile <- paste(lift[1,1],gsub(".x","",colnames(tab)[i]),"rec",sep=".")
 	
 	# write input files
-	write.table(s1,file=ffile,row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
+	write.table(s1[keep,],file=ffile,row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
 	# write.table(rec1,file=rfile,row.names=FALSE,col.names=TRUE,sep="\t",quote=FALSE)
 }
 
