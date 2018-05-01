@@ -8,4 +8,4 @@ module load samtools/1.3
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel sh ~/het_grand/rna_align/mergebams.sh ::: $(find /scratch/nmr15102/tolerance_rnaseq/rawdata -name "*pt.bam" | grep -oP "(?<=Sample_)[^/]+" | sort | uniq)
+$parallel sh ~/het_grand/rna_align/mergebams.sh ::: $(find /scratch/nmr15102/tolerance_rnaseq/tolerance_rnaseq/ -name "*pt.bam" | grep -oP "(?<=Sample_)[^/]+" | sort | uniq)
