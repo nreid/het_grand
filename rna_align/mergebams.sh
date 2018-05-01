@@ -2,7 +2,7 @@
 
 basename=$1
 
-inbam=/scratch/nmr15102/tolerance_rnaseq/rawdata
+inbam=/scratch/nmr15102/tolerance_rnaseq/tolerance_rnaseq
 outdir=/scratch/nmr15102/tolerance_rnaseq/alignments
 
 BAM=/home/nmr15102/bin/bamtools/bin/bamtools
