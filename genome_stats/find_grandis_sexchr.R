@@ -646,10 +646,10 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 	#if((i %% 1000) == 0){print(i)}
 
-	if(length(table(gg))<2 | length(table(grandsex[keepg]))<2){pg <- NA}
-	else{pg <- chisq.test(x=gg,y=grandsex)$p.value}
-	if(length(table(gh))<2 | length(table(hetsex[keeph]))<2){ph <- NA}
-	else{ph <- chisq.test(x=gh,y=hetsex)$p.value}
+	if(length(table(gg))<2 | length(table(grandsex[keepg]))<2){pg <- NA
+	}	else {pg <- chisq.test(x=gg,y=grandsex)$p.value}
+	if(length(table(gh))<2 | length(table(hetsex[keeph]))<2){ph <- NA
+	}	else {ph <- chisq.test(x=gh,y=hetsex)$p.value}
 	if(is.na(pg) & is.na(ph)){next()}
 
 	
