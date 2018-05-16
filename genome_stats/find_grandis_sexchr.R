@@ -611,7 +611,7 @@ sexes <- read.table("~/het_grand/all_sexes.txt",stringsAsFactors=FALSE)
 rownames(sexes) <- sexes[,1]
 
 grandsex <- sexes[cname[10:585][slist[[2]]],3]
-hetsex <- sexes[cname[10:585][slist[[1]],3]
+hetsex <- sexes[cname[10:585][slist[[1]]],3]
 
 grandm <- slist[[2]][grandsex=="M"]
 grandf <- slist[[2]][grandsex=="F"]
