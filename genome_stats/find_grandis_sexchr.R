@@ -603,19 +603,20 @@ sss[grep("GB|BB|SJSP|SP|BNP|PB|VB",sss)] <- "Grand"
 sssu <- unique(sss)
 
 slist <- list(
-	North=which(sss=="North"),
-	South=which(sss=="South"),
-	Admix=which(sss=="Admix"),
+	Het=which(sss!="Grand"),
 	Grand=which(sss=="Grand")
 	)
 
 sexes <- read.table("~/het_grand/all_sexes.txt",stringsAsFactors=FALSE)
 rownames(sexes) <- sexes[,1]
 
-grandsex <- sexes[cname[10:585][slist[[4]]],3]
+grandsex <- sexes[cname[10:585][slist[[2]]],3]
+hetsex <- sexes[cname[10:585][slist[[1]],3]
 
-grandm <- slist[[4]][grandsex=="M"]
-grandf <- slist[[4]][grandsex=="F"]
+grandm <- slist[[2]][grandsex=="M"]
+grandf <- slist[[2]][grandsex=="F"]
+hetm <- slist[[1]][grandsex=="M"]
+hetf <- slist[[1]][grandsex=="F"]
 
 f <- file("stdin")
 open(f)
@@ -632,17 +633,27 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 	gt <- line[10:585]
 	gt <- as.numeric(gt)
-	gt <- gt[slist[[4]]]
 
-	keep <- !is.na(gt)
-	gs <- grandsex[keep]
-	gt <- gt[keep]
+	tab <- table(gt)
+	tab <- sum(tab) - max(tab)
+	if(tab < 3){next()}
+
+	gg <- gt[slist[[2]]]
+	gh <- gt[slist[[1]]]
+
+	keepg <- !is.na(gg)
+	keeph <- !is.na(gh)
 
 	#if((i %% 1000) == 0){print(i)}
 
-	if(length(table(gt))<2 | length(table(gs))<2){next()}
-	pa <- chisq.test(x=gs,y=gt)$p.value
-	pa <- c(line[1],line[2],pa)
+	if(length(table(gg))<2 | length(table(grandsex[keepg]))<2){pg <- NA}
+	else{pg <- chisq.test(x=gg,y=grandsex)$p.value}
+	if(length(table(gh))<2 | length(table(hetsex[keeph]))<2){ph <- NA}
+	else{ph <- chisq.test(x=gh,y=hetsex)$p.value}
+	if(is.na(pg) & is.na(ph)){next()}
+
+	
+	pa <- c(line[1],line[2],ph,pg)
 
 	cat(paste(pa,collapse="\t",sep=""),"\n",sep="")
 

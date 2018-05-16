@@ -853,7 +853,7 @@ revc <- function(x){
 
 
 
-# SOMM4 ER:
+	# SOMM4 ER:
 	# Not enough information to clear this up. 
 
 	del <- read.table("~/projects/het_grand/heteroclitus_del_gt.txt",stringsAsFactors=FALSE)
@@ -881,7 +881,7 @@ revc <- function(x){
 
 	mean(colMeans(gmg[,stat<0.2]==1))
 
-#	plot(colMeans(gmg)/2,colMeans(gmg==1))
+	#	plot(colMeans(gmg)/2,colMeans(gmg==1))
 	plot(stat,colMeans(gmg==1))
 	image(gmg[,order(stat)])
 	image(gmg[fdif>0.25,order(stat)])
@@ -905,9 +905,534 @@ revc <- function(x){
 	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"])
 
 
-# 
+	# 
 
 
+
+
+
+# cyp1a NW_012234324.1:500000-1500000.vcf.gz
+	# orientation is opposite to map assembly
+	# 
+
+	scaflen <- fai[fai[,1]=="NW_012234324.1",2]
+	offset <- lift[win[,1]=="NW_012234324.1",2] %>% range()
+	
+	hnames <- scan("~/projects/het_grand/vcf_header.txt",what="character",sep="\t")
+	vcf <- read.table("~/projects/het_grand_data/NW_012234324.1:500000-1500000.vcf.gz",stringsAsFactors=FALSE)
+	colnames(vcf) <- hnames
+	vcf <- vcf[!grepl(",",vcf[,5]),]
+	vcf[,1] <- "chr5"
+	# renumber variants
+	vcf[,2] <- vcf[,2]+offset[1]
+	
+	pgt <- as.matrix(vcf[,10:297])
+		class(pgt) <- "numeric"
+
+	
+	sexes <- read.table("~/projects/het_grand/all_sexes.txt",stringsAsFactors=FALSE)
+	rownames(sexes) <- sexes[,1]
+
+	## SOMM1 NBH: haplotype appears not to be in the cross. 
+	ind1 <- somm1$vcf[,1]=="chr5" & somm1$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm1$vcf[somm1$vcf[,1]=="chr5",2]
+
+	gm <- somm1$hap[ind1,]
+	gmg <- somm1$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("BP|NYC",pop)
+	nsen <- grepl("F|SH",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.4,]/2)	
+
+	plot(stat,ylim=c(0,1),col=sex2+1,pch=20)
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:83,7),]/2)
+	points(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.4,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(sstat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm1$gt[ind1,][fdif > 0.25,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+	# SOMM2 NYC: one copy of CYP1A selected haplotpye in the cross. copy number unknown. 
+	ind1 <- somm2$vcf[,1]=="chr5" & somm2$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm2$vcf[somm2$vcf[,1]=="chr5",2]
+
+	gm <- somm2$hap[ind1,]
+	gmg <- somm2$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("BP|NYC",pop)
+	nsen <- grepl("F|SH",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.25,]/2)	
+
+	plot(stat,ylim=c(0,1),col=sex2+1,pch=20)
+	rowMeans(gp[,ntol],na.rm=TRUE)[fdif > 0.25]
+	rowMeans(gp[,nsen],na.rm=TRUE)[fdif > 0.25]
+
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:64,8),]/2)
+	plot(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.4,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(sstat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm2$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+
+
+	# SOMM3 BP: cyp1a at best one copy in parents. 
+	ind1 <- somm3$vcf[,1]=="chr5" & somm3$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm3$vcf[somm3$vcf[,1]=="chr5",2]
+
+	gm <- somm3$hap[ind1,]
+	gmg <- somm3$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("BP|NYC",pop)
+	nsen <- grepl("F|SH",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.4,]/2)	
+
+	plot(stat,ylim=c(0,1),col=sex2+1,pch=20)
+	rowMeans(gp[,ntol],na.rm=TRUE)[fdif > 0.25]
+	rowMeans(gp[,nsen],na.rm=TRUE)[fdif > 0.25]
+
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:64,8),]/2)
+	plot(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.25,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm3$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+
+
+
+	# SOMM4 ER: two copies in cross. 
+
+	ind1 <- somm4$vcf[,1]=="chr5" & somm4$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm4$vcf[somm4$vcf[,1]=="chr5",2]
+
+	gm <- somm4$hap[ind1,]
+	gmg <- somm4$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("ER",pop)
+	nsen <- grepl("KC",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.4,]/2)	
+
+	plot(stat,ylim=c(0,1),col=sex2+1,pch=20)
+	rowMeans(gp[,ntol],na.rm=TRUE)[fdif > 0.25]
+	rowMeans(gp[,nsen],na.rm=TRUE)[fdif > 0.25]
+
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:64,8),]/2)
+	plot(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.25,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm4$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+
+
+# aip NW_012224618.1:1-500000.vcf.gz
+	# orientation is same as map assembly
+	# 
+
+	scaflen <- fai[fai[,1]=="NW_012224618.1",2]
+	offset <- lift[win[,1]=="NW_012224618.1",2] %>% range()
+	
+	hnames <- scan("~/projects/het_grand/vcf_header.txt",what="character",sep="\t")
+	vcf <- read.table("~/projects/het_grand_data/NW_012224618.1:1-500000.vcf.gz",stringsAsFactors=FALSE)
+	colnames(vcf) <- hnames
+	vcf <- vcf[!grepl(",",vcf[,5]),]
+	vcf[,1] <- "chr18"
+	# renumber variants
+	vcf[,2] <- vcf[,2]+offset[1]
+	
+	pgt <- as.matrix(vcf[,10:297])
+		class(pgt) <- "numeric"
+
+	
+	sexes <- read.table("~/projects/het_grand/all_sexes.txt",stringsAsFactors=FALSE)
+	rownames(sexes) <- sexes[,1]
+
+	## SOMM1 NBH: haplotype appears not to be in the cross. 
+	ind1 <- somm1$vcf[,1]=="chr18" & somm1$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm1$vcf[somm1$vcf[,1]=="chr18",2]
+
+	gm <- somm1$hap[ind1,]
+	gmg <- somm1$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("BP|NYC",pop)
+	nsen <- grepl("F|SH",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.2,]/2)	
+
+	plot(stat,ylim=c(0,1),pch=20)
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:83,7),]/2)
+	points(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.4,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(sstat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm1$gt[ind1,][fdif > 0.25,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+	# SOMM2 NYC: one copy of CYP1A selected haplotpye in the cross. copy number unknown. 
+	ind1 <- somm2$vcf[,1]=="chr18" & somm2$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm2$vcf[somm2$vcf[,1]=="chr18",2]
+
+	gm <- somm2$hap[ind1,]
+	gmg <- somm2$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("BP|NYC",pop)
+	nsen <- grepl("F|SH",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.25,]/2)	
+
+	plot(stat,ylim=c(0,1),col=sex2+1,pch=20)
+	rowMeans(gp[,ntol],na.rm=TRUE)[fdif > 0.25]
+	rowMeans(gp[,nsen],na.rm=TRUE)[fdif > 0.25]
+
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:64,8),]/2)
+	plot(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.4,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(sstat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm2$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+
+
+	# SOMM3 BP: cyp1a at best one copy in parents. 
+	ind1 <- somm3$vcf[,1]=="chr18" & somm3$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm3$vcf[somm3$vcf[,1]=="chr18",2]
+
+	gm <- somm3$hap[ind1,]
+	gmg <- somm3$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("BP|NYC",pop)
+	nsen <- grepl("F|SH",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	sex2 <- sstat > 0.3
+	stat <- colMeans(gmg[fdif > 0.2,]/2)	
+
+	plot(stat,ylim=c(0,1),pch=20)
+	rowMeans(gp[,ntol],na.rm=TRUE)[fdif > 0.25]
+	rowMeans(gp[,nsen],na.rm=TRUE)[fdif > 0.25]
+
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:64,8),]/2)
+	plot(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.25,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm3$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
+
+
+
+
+	# SOMM4 ER: two copies in cross. 
+	
+	ind1 <- somm4$vcf[,1]=="chr18" & somm4$vcf[,2] %in% (vcf[,2])
+	ind2 <- vcf[,2] %in% somm4$vcf[somm4$vcf[,1]=="chr18",2]
+
+	gm <- somm4$hap[ind1,]
+	gmg <- somm4$gt[ind1,]
+	gp <- as.matrix(vcf[ind2,10:297])
+		class(gp) <- "numeric"
+	pop <- gsub("-.*","",colnames(gp))
+	sex <- sexes[colnames(gp),3]
+
+	ntol <- grepl("ER",pop)
+	nsen <- grepl("KC",pop)
+	male <- sex=="M"
+	female <- sex=="F"
+
+	fdif <- (rowMeans(gp[,ntol&female],na.rm=TRUE) - rowMeans(gp[,nsen&female],na.rm=TRUE))	
+	sdif <- (rowMeans(gp[,male],na.rm=TRUE) - rowMeans(gp[,female],na.rm=TRUE))	
+
+	sstat <- colMeans(gmg[sdif > 0.4,]/2)
+	stat <- colMeans(gmg[fdif > 0.25,]/2)	
+
+	plot(stat,ylim=c(0,1),pch=20)
+	rowMeans(gp[,ntol],na.rm=TRUE)[fdif > 0.25]
+	rowMeans(gp[,nsen],na.rm=TRUE)[fdif > 0.25]
+
+	# text(1:96,stat,pmat[rownames(mds),"phen"])
+
+	# randomize to check
+	stat <- colMeans(gmg[sample(1:64,8),]/2)
+	plot(stat,ylim=c(0,1),pch=20,col=rgb(sex2+0,0,0,.5))
+
+
+
+	mean(colMeans(gmg[,stat>0.3]==1))
+
+	plot(stat,colMeans(gmg==1))
+	image(gmg[,order(stat)])
+	image(gmg[fdif>0.25,order(stat)])
+
+	# FOR HAPLOTYPES
+	stat <- colMeans(gm[fdif > 0.25,])
+	sstat <- colMeans(gm[sdif > 0.4,])
+	# randomize to check
+		# stat <- colMeans(gmg[sample(1:107,27),]/2)
+
+	plot(stat,ylim=c(0,1))
+
+	plot(stat,colMeans(gm==1))
+	image(gm[,order(stat)])
+	image(gm[fdif>0.25,order(stat)])
+
+	(rowMeans(pgt[,ntol],na.rm=TRUE) - rowMeans(pgt[,nsen],na.rm=TRUE)) %>% plot(x=vcf[,2],y=.,pch=20,col=ind2+1)
+
+	mds <- t(somm4$gt[ind1,]) %>% dist() %>% cmdscale()
+	plot(mds,col="white")
+	text(jitter(mds[,1],amount=1),jitter(mds[,2],amount=1),pmat[rownames(mds),"phen"],col=sex2+1)
 
 
 

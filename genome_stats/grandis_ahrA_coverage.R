@@ -101,3 +101,12 @@ gts[gts[,4] > 0.7,3] <- 0
 group_by(gts,pop) %>% summarize(.,mean(genotype)/2)
 
 table(gts[,2:3])
+
+
+
+(rowSums(dep2[,gts$genotype==2])/median(rowSums(dep2[1:75000,gts$genotype==2]))) %>% plot(x=dep[,2],y=.,ylim=c(0,3),pch=20,cex=.2)
+(rowSums(dep2[,gts$genotype==0])/median(rowSums(dep2[1:75000,gts$genotype==0]))) %>% points(x=dep[,2],y=.,ylim=c(0,3),pch=20,cex=.2,col=rgb(1,0,0,.1))
+
+
+
+

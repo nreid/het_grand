@@ -4,6 +4,9 @@
 library(stringr)
 library(magrittr)
 library(phytools)
+library(tidyverse)
+library(mscr)
+
 # this is really dumb!
 
 cname <- c(
@@ -657,15 +660,30 @@ sss[grep("ER|KC",sss)] <- "South"
 sss[grep("GB|BB|SJSP|SP|BNP|PB|VB",sss)] <- "Grand"
 sssu <- unique(sss)
 
+# 
+lift <- read.table("~/projects/het_grand_data/fst_dxy_allpops_liftover.txt",stringsAsFactors=FALSE)
+lord <- order(lift[,1],lift[,2])
+lift <- lift[lord,]
+
+# old scaffold mappings
+om <- read.table("~/projects/het_grand/old_scaffold_mappings.txt",stringsAsFactors=FALSE)
+rownames(om) <- om[,1]
+om2 <- om[-10180,]
+rownames(om2) <- om2[,2]
+
+# sexes
+sexes <- read.table("../het_grand/all_sexes.txt",stringsAsFactors=FALSE)
+rownames(sexes) <- sexes[,1]
+
 # exclude individuals with lower coverage
 toss <- c("BP-19","BP-26","BP-38","ER-20","ER-27","ER-36","ER-47","ER-50",
-"ER-53","F-23","F-35","F-39","F-47","F-50","F-52","KC-56",
-"KC-9","NYC-22","NYC-42","SH-32","SH-8","BU000101.GB","BU000136.VB_A","BU000144.VB_A",
-"BU000186.PB_A","BU000211.PB_B","BU000212.PB_B","BU000214.PB_B",
-"BU000217.PB_B","BU000228.PB_B","BU000242.PB_B","BU000349.BNP",
-"BU000415.BB","BU000419.SJSP","BU000421.SJSP","BU000432.SJSP",
-"BU000441.SJSP","BU000442.SJSP","BU000444.SJSP","BU000451.SJSP",
-"BU000458.SJSP","BU000460.SJSP","BU000463.SJSP")
+	"ER-53","F-23","F-35","F-39","F-47","F-50","F-52","KC-56",
+	"KC-9","NYC-22","NYC-42","SH-32","SH-8","BU000101.GB","BU000136.VB_A","BU000144.VB_A",
+	"BU000186.PB_A","BU000211.PB_B","BU000212.PB_B","BU000214.PB_B",
+	"BU000217.PB_B","BU000228.PB_B","BU000242.PB_B","BU000349.BNP",
+	"BU000415.BB","BU000419.SJSP","BU000421.SJSP","BU000432.SJSP",
+	"BU000441.SJSP","BU000442.SJSP","BU000444.SJSP","BU000451.SJSP",
+	"BU000458.SJSP","BU000460.SJSP","BU000463.SJSP")
 
 cname <- c("chr","cstart","cend","scaf","start","end",cname[10:585])
 
@@ -695,8 +713,13 @@ cv <- apply(ghd2,MAR=1,FUN=function(x){sd(x,na.rm=TRUE)/mean(x,na.rm=TRUE)})
 me <- apply(ghd2,MAR=1,FUN=function(x){mean(x,na.rm=TRUE)})
 # median for each row
 med <- apply(ghd2,MAR=1,FUN=function(x){median(x,na.rm=TRUE)})
-# median for each row
-q90 <- apply(ghd2,MAR=1,FUN=function(x){quantile(x,prob=0.9,na.rm=TRUE)})
+# 
+q99 <- apply(ghd2,MAR=1,FUN=function(x){quantile(x,prob=0.9,na.rm=TRUE)})
+#
+q01 <- apply(ghd2,MAR=1,FUN=function(x){quantile(x,prob=0.01,na.rm=TRUE)})
+
+ghdmin <- apply(ghd2,MAR=1,FUN=function(x){min(x,na.rm=TRUE)})
+
 
 # some subset vectors excluding small windows, or unassigned scaffolds or particular chromosomes
 subw <- (ghd[,3] - ghd[,2]) > 50000
@@ -708,66 +731,125 @@ subw4 <- ((ghd[,3] - ghd[,2]) > 50000) & (!grepl("^NW",ghd[,1])) & med > 30
 # some plots
 plot(me[subw2],pch=20,cex=.2,col=factor(ghd[subw2,1]))
 plot(cv[subw2],pch=20,cex=.2,col=factor(ghd[subw2,1]))
+plot(med[subw2],pch=20,cex=.2,col=factor(ghd[subw2,1]))
 plot(ghdm[subw2,1],pch=20,cex=.2,col=factor(ghd[subw2,1]))
 
 
 
 # plot a single indiviual's stats
 par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
-i <- "BU000400.BB"
+i <- "BU000201.PB_A"
 # median scaled
 plot(ghdm[subw3,i],pch=20,cex=.5,col=factor(ghd[subw3,1]))
 # raw distances
 plot(ghd[subw3,colnames(ghd)==i],pch=20,cex=.5,col=factor(ghd[subw3,1]))
 
-
+thresh <- 0.93
 bc <- c()
 blist <- list()
 for(i in 1:dim(ghdm)[2]){
 	#i <- 4
-	su <- which(subw3&ghdm[,i]<0.93)
-	if(length(su) < 5){
+	su <- which(subw3&ghdm[,i]<thresh)
+	if(length(su) < 1){
 		bc <- c(bc,0)
 		blist[[i]] <- data.frame()
 		next()
 	}
-	block <- mergewin(ghd[su,c(1:3)],ghdm[su,i],0.93,tails="lesser",buff=400001)
-	block <- block[block$count > 4,]
-	
-	bc <- c(bc,dim(block)[1])
-	if(dim(block)[1]==0){blist[[i]] <- data.frame();next()}
-
+	if(length(su) < 2){
+		# double the outlier window just to get it through the function, which expects more than 1 window. 
+		block <- mergewin(ghd[c(su,su),c(1:3)],ghdm[c(su,su),i],thresh,tails="lesser",buff=400001)
+		# replace the window count to make it accurate. 
+		block$count <- 1
+		blist[[i]] <- cbind(block,ind=i,sam=colnames(ghdm)[i])
+		bc <- c(bc,dim(block)[1])
+		next()
+	}
+	block <- mergewin(ghd[su,c(1:3)],ghdm[su,i],thresh,tails="lesser",buff=400001)
 	blist[[i]] <- cbind(block,ind=i,sam=colnames(ghdm)[i])
+	bc <- c(bc,dim(block)[1])
+
 	if((i%%10) == 0){print(i)}
 }
 
+# n introgression blocks, filtered by min count of windows
+bc <- sapply(blist,FUN=function(x){dim(x[x$count > 0,])[1]})
+
 # exclude the weird individual with subp
-subp <- bc < 40
+subp <- (1:length(bc)) != 177
 # put all blocks in one table
-allblocks <- do.call(rbind,blist[subp])
+allblocks <- do.call(rbind,blist[subp])[,-c(5,6)]
 ord <- order(allblocks[,1],allblocks[,2],allblocks[,3])
 allblocks <- allblocks[ord,]
+# are distant blocks being strung together?
 hist(allblocks$length/allblocks$count/100000)
 
+# summaries by chromosome
+# chr length
+chrlen <- lift[grep("chr",lift[,1]),] %>% group_by(.,V1) %>% summarize(.,max(V3)) %>% data.frame()
+colnames(chrlen)[1] <- "chrom"
+sumblock <- group_by(allblocks[allblocks$count > 4,],chrom) %>% summarize(.,sum(length),length(length)) %>% data.frame()
+blockstat <- full_join(chrlen,sumblock)
+
+# does the SDR show signs of introgression?
+data(sexchrs)
+sexscaf <- om[sexchrs,2]
+SDRint <- (ghd[,4] %in% sexscaf) & (rowSums(ghdm < thresh,na.rm=TRUE) > 0) & subw3
+rowSums(ghdm[SDRint,subp] < thresh,na.rm=TRUE) %>% plot()
+
+# do sexes show a biased signal?
+# consider only BB,VB,PB
+subi <- grep("BB|VB|PB",colnames(ghdm))
+boxplot(colSums(ghdm[SDRint,subi] < thresh,na.rm=TRUE) ~ sexes[colnames(ghdm[,subi]),3])
+barplot(table(colSums(ghdm[SDRint,subi] < thresh,na.rm=TRUE),sexes[colnames(ghdm[,subi]),3]),beside=TRUE)
+barplot(table(colSums(ghdm[,subp] < thresh,na.rm=TRUE),sexes[colnames(ghdm[,subp]),3]),beside=TRUE)
+
+# are G scores lower in males in SDR?
+gsdr <- ghdm[SDRint,subi]
+gsdr[gsdr >= thresh] <- NA
+vals <- as.vector(gsdr)
+sex <- rep(sexes[colnames(ghdm[,subi]),3],97)
+
+boxplot(as.vector(gsdr)~rep(sexes[colnames(ghdm[,subi]),3],97))
+
+wilcox.test(vals[sex=="M"],vals[sex=="F"])
+
 # merge blocks across individuals
-mblocks <- mergewin(allblocks[,1:3],stat=rep(0,dim(allblocks)[1]),qu=2,tail="lesser",buff=1)
+minblocks <- allblocks$count > 4
+mblocks <- mergewin(allblocks[minblocks,1:3],stat=rep(0,dim(allblocks[minblocks,])[1]),qu=2,tail="lesser",buff=110)
 
 
 # visualize blocks per individual per population
-boxplot(bc[subp] ~ pop[subp])
+# filter by window count first:
+bc <- sapply(blist,FUN=function(x){dim(x[x$count > 0,])[1]})
+
+# filter by window count and chromosome:
+# bc <- sapply(blist,FUN=function(x){dim(x[x$count > 0 & x$chrom=="chr24",])[1]})
+
+upop <- c("BB","VB","PB","SJSP","BNP","SP","GB")
+boxplot(bc[subp] ~ factor(pop[subp],upop))
 barplot(table(bc[subp],pop[subp]),beside=TRUE)
 table(bc[subp],pop[subp])
+(group_by(data.frame(bc=bc[subp],pop=pop[subp]),pop) %>% summarize(.,med=median(bc),m=mean(bc),s=sum(bc),l=length(bc)))[c(1,7,4,5,2,6,3),]
 
 # blocks per individual excluding chr1
 cexchr1 <- allblocks[allblocks[,1]!="chr1","ind"] %>% factor(.,levels=1:266) %>% table()
 table(pop,cexchr1)
 barplot(table((cexchr1),pop),beside=TRUE)
 
+# plot statistic distribution
+hist(ghdm[subw3,subp],breaks=seq(0,1.4,0.001),xlim=c(0.7,1),main="G statistic distribution",xlab=NULL)
+abline(v=0.93,col="red")
+
 # min median scaled statistic for resistant and sensitive individuals
-par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
+par(mfrow=c(2,1),mar=c(0,4,0,0),oma=c(3,3,1,1))
 sen <- colnames(ghdm)!="BU000078.GB" & (pop=="SP"|pop=="GB")
-plot(apply(ghdm[subw4,subp & !sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1))
-plot(apply(ghdm[subw4,subp & sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1))
+plot(apply(ghdm[subw4,subp & !sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1),ylab="Gmin - contam")
+plot(apply(ghdm[subw4,subp & sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1),ylab="Gmin - clean")
+
+
+# estimate admixture time
+
+1/mean(allblocks$length[allblocks$count > 4] * 1e-8)
 
 
 # validate a block from individual 99, chr15: NW_012224452.1.vcf.gz
@@ -799,6 +881,34 @@ text(mds[,1],mds[,2],rownames(mds),cex=.5)
 plot(as.matrix(d)[444,-444]/as.matrix(d)[445,-444])
 
 diffs <- which(rowMeans(gt[,spec2=="Grand"],na.rm=TRUE) - rowMeans(gt[,spec2!="Grand"],na.rm=TRUE) > 0.8)
+
+
+# plot blocks
+
+chr1 <- allblocks[allblocks[,1]=="chr1",-c(5,6)]
+chr1 <- chr1[order(chr1$length,decreasing=TRUE),]
+
+
+dev.new()
+plot(NULL,xlim=c())
+
+i <- 1
+vec <- rep(NA,length(chr1[,1]))
+vec[1] <- 1
+while(any(is.na(vec))){
+	for(j in 1:length(chr1[,1])){
+
+		if(!is.na(vec[j])){next()}
+		ov <- chr1[j,1] == chr1[which(vec==i),1] & (chr1[j,3] < chr1[which(vec==i),2] | chr1[j,2] > chr1[which(vec==i),3] )
+		if(sum(!ov,na.rm=TRUE)){vec[j] <- i}
+#		print(c(i,j))
+		}
+	i <- i + 1
+
+}
+
+
+
 
 
 
