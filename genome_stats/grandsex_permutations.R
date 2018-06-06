@@ -1,6 +1,6 @@
 library(tidyverse)
 library(stringr)
-library(mscr)
+library(qvalue)
 
 smother <- function(x,winsize){
 	
@@ -64,13 +64,22 @@ rownames(om) <- om[,1]
 om2 <- om[-10180,]
 rownames(om2) <- om2[,2]
 
-data(sexchrs)
-sexscaf <- om[sexchrs,2]
 
 # scaffold to chromosome translations
 lift <- read.table("~/projects/het_grand_data/fst_dxy_allpops_liftover.txt",stringsAsFactors=FALSE)
 lord <- order(lift[,1],lift[,2])
 lift <- lift[lord,]
+
+val <- read.table("~/projects/het_grand_data/popsites.1kb_win.bed.gz",stringsAsFactors=FALSE)
+val <- val[lord, ]
+
+d <- duplicated(val[,1])
+lgscaf <- cbind(scaf=val[!d,1],chr=lift[!d,1])
+rownames(lgscaf) <- lgscaf[,1]
+
+fai <- read.table("GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta.fai",stringsAsFactors=FALSE)
+rownames(fai) <- fai[,1]
+
 
 # read in individual counts in 1kb windows. 
 sco <- read.table("1kb_sex_counts.txt.gz",stringsAsFactors=FALSE,header=TRUE)
@@ -95,8 +104,8 @@ for(i in 7:dim(sco)[2]){
 }
 
 # smooth values
-sco2 <- sco
-for(i in 7:575){ sco2[,i] <- smother(sco2[,i],5);print(i)}
+# sco2 <- sco
+# for(i in 7:575){ sco2[,i] <- smother(sco2[,i],5);print(i)}
 
 
 # filter windows??
@@ -122,262 +131,79 @@ specsex <- rep("h",dim(sco)[2]-6)
 specsex[which(grepl("BU",cname))-6] <- "g"
 specsex <- paste(specsex,sexes[cname[7:length(cname)],3],sep="_")
 
-# permutations for coverage among sexes
-# function to resample columns 
-resam <- function(n1,n2,vec){
 
-	sam <- sample(vec)
-	return(list(s1=sam[1:n1],s2=sam[(n1+1):length(sam)]))
+# wilcox test for differences in coverage between the sexes
+# run to regenerate p-values
 
-}
+# pvals <- cbind(sco[,1:6],gp=NA,hp=NA)
 
-# permutations for grandis:
-# iteratively refine low p-values to reduce computational burden
+# for(i in 1:dim(pvals)[1]){
 
-# empirical difference in coverage between sexes. 
-	# should matter that I use sum instead of mean b/c permutations
-gdiff <- rowSums(sco[,gM]) - rowSums(sco[,gF])
+# 	pvals[i,7] <- wilcox.test(x=unlist(sco[i,gM]),y=unlist(sco[i,gF]))$p.value
+# 	pvals[i,8] <- wilcox.test(x=unlist(sco[i,hM]),y=unlist(sco[i,hF]))$p.value
+# 	if(i %% 1000 == 0){print(i)}
+# }
 
+# pvals <- cbind(pvals,gq=qvalue(pvals[,"gp"])$qvalues,hq=qvalue(pvals[,"hp"])$qvalues)
 
-# upper and lower tail p-value initialization
-gpvalu <- rep(0,length(gdiff))
-gpvall <- rep(0,length(gdiff))
+# read in p/q values if already calculated:
+pvals <- read.table("sex_coverage_wilcoxonPQvals.txt.gz",stringsAsFactors=FALSE,header=TRUE)
 
-# loop through 100 randomizations
-for(i in 1:100){
+ord <- order(pvals[,2],pvals[,3])
+gwin <- mergewin(win=pvals[which(pvals$gq < 0.05),2:4],stat=pvals$gq[which(pvals$gq < 0.05)],qu=0.05,buff=5000,tail="lesser")
+hwin <- mergewin(win=pvals[which(pvals$hq < 0.05),2:4],stat=pvals$hq[which(pvals$hq < 0.05)],qu=0.05,buff=5000,tail="lesser")
 
-	sam <- resam(125,161,c(gM,gF))
-	rgdiff <- rowSums(sco[,sam[[1]]]) - rowSums(sco[,sam[[2]]])
-	gpvalu <- gpvalu + (rgdiff <= gdiff)
-	gpvall <- gpvall + (rgdiff >= gdiff)
-	if(i %% 10 == 0){print(i)}
+# add mean coverage for each interval
+for(i in 1:dim(gwin)[1]){
 
-}
-
-# turn counts into p-values
-gpvalu <- gpvalu/100
-gpvall <- gpvall/100
-
-
-# refine p-values for subset with p < 0.1
-	# do 1k loops for these windows
-subw <- gpvalu < 0.1 | gpvall < 0.1
-scow <- sco[subw,]
-
-gdiffw <- gdiff[subw]
-gpvaluw <- rep(0,sum(subw))
-gpvallw <- rep(0,sum(subw))
-
-for(i in 1:1000){
-
-	sam <- resam(125,161,c(gM,gF))
-	rgdiff <- rowSums(scow[,sam[[1]]]) - rowSums(scow[,sam[[2]]])
-	gpvaluw <- gpvaluw + (rgdiff <= gdiffw)
-	gpvallw <- gpvallw + (rgdiff >= gdiffw)
-	if(i %% 20 == 0){print(i)}
+	subw <- sco[,2]==gwin[i,1] & sco[,3]>=gwin[i,2] & sco[,4]<=gwin[i,3]
+	tsum <- rowMeans(sco[subw,gM]) %>% mean()
+	gwin[i,8] <- tsum
+	tsum <- rowMeans(sco[subw,gF]) %>% mean()
+	gwin[i,9] <- tsum
 
 }
 
-# turn counts into p-values
-gpvaluw <- gpvaluw/1000
-gpvallw <- gpvallw/1000
+for(i in 1:dim(hwin)[1]){
 
-# place refined p-values into original p-value vectors
-
-gpvalu[subw] <- gpvaluw
-gpvall[subw] <- gpvallw
-
-# iterate, this time refine p-values < 0.02
-	# do 10k permutations
-
-subw <- gpvalu < 0.02 | gpvall < 0.02
-scow <- sco[subw,]
-
-gdiffw <- gdiff[subw]
-gpvaluw <- rep(0,sum(subw))
-gpvallw <- rep(0,sum(subw))
-
-for(i in 1:10000){
-
-	sam <- resam(125,161,c(gM,gF))
-	rgdiff <- rowSums(scow[,sam[[1]]]) - rowSums(scow[,sam[[2]]])
-	gpvaluw <- gpvaluw + (rgdiff <= gdiffw)
-	gpvallw <- gpvallw + (rgdiff >= gdiffw)
-	if(i %% 100 == 0){print(i)}
+	subw <- sco[,2]==hwin[i,1] & sco[,3]>=hwin[i,2] & sco[,4]<=hwin[i,3]
+	tsum <- rowMeans(sco[subw,hM]) %>% mean()
+	hwin[i,8] <- tsum
+	tsum <- rowMeans(sco[subw,hF]) %>% mean()
+	hwin[i,9] <- tsum
 
 }
 
-# turn counts into p-values
-gpvaluw <- gpvaluw / 10000
-gpvallw <- gpvallw / 10000
 
-# place refined p-values into original p-value vectors
+# read in SNV p/q values (only those < 0.05)
+sx <- read.table("sex_chisq.txt.gz",stringsAsFactors=FALSE)
 
-gpvalu[subw] <- gpvaluw
-gpvall[subw] <- gpvallw
+# read in heteroclitus SDR intervals
+hetint <- read.table("heteroclitus_SNVsex_intervals.bed",stringsAsFactors=FALSE)
 
+# counts of significant SNVs per scaffold
+scount <- group_by(sx,V1) %>% summarize(.,hetcount=sum(V5 < 0.000001,na.rm=TRUE),gcount=sum(V6 < 0.000001,na.rm=TRUE)) %>% data.frame()
+scount <- cbind(scount,scaflen=fai[scount[,1],2]/1000000,hden=scount[,2]/fai[scount[,1],2]*1000000)
+scount[order(scount[,2]/scount[,4]),]
 
-# plot windows with low p-values
+lgscaf[scount[scount[,2] > 1,1],2] %>% table() %>% sort() %>% data.frame()
 
-plot(log(rowMeans(sco[gpvall < 0.01,gM])/rowMeans(sco[gpvall < 0.01,gF]),2),pch=20,cex=.2)
-plot(log(rowMeans(sco[gpvalu < 0.01,gM])/rowMeans(sco[gpvalu < 0.01,gF]),2),pch=20,cex=.2)
-
-plot(log(gpvall,10))
-
-
-# collapse into outlier windows
-upwin <- mergewin(win=sco[gpvall < 0.001,2:4],stat=gpvalu[gpvall < 0.001],qu=0.001,buff=5000)
-lowin <- mergewin(win=sco[gpvalu < 0.001,2:4],stat=gpvalu[gpvalu < 0.001],qu=0.001,buff=5000)
-
-upwin <- upwin[order(upwin$count,decreasing=TRUE),]
-lowin <- lowin[order(lowin$count,decreasing=TRUE),]
-
-subscaf <- sco[,2] == "NW_012224686.1"
-plot(log(rowMeans(sco[subscaf,gM])/rowMeans(sco[subscaf,gF]),2),pch=20,cex=1,col=(gpvalu[subscaf] < 0.001 | gpvall[subscaf] < 0.001)+1)
-
-bigdups <- (gpvall < 0.001) & (sco[,2] %in% upwin[1:7,1])
-bigdups <- colSums(sco[bigdups,c(gM,gF)])
-MF <- c(rep(1,length(gM)),rep(2,length(gF)))
-
-ord <- order(bigdups)
-plot(bigdups[ord],pch=20,col=MF[ord])
+fai[scount[scount[,2] > 1,1],2] %>% sum()
 
 
-#########################################
+plot(rowMeans(sco[pvals$hq < 0.05,hM]),rowMeans(sco[pvals$hq < 0.05,hF]),pch=20,cex=.6)
+abline(0,1)
+abline(h=1,v=1)
+abline(h=c(0.5,2),v=c(0.5,2),lty=2)
 
-#########################################
-
-#########################################
-
-# permutations for HETEROCLITUS:
-# iteratively refine low p-values to reduce computational burden
-
-# empirical difference in coverage between sexes. 
-	# should matter that I use sum instead of mean b/c permutations
-hdiff <- rowSums(sco[,hM]) - rowSums(sco[,hF])
-
-
-# upper and lower tail p-value initialization
-hpvalu <- rep(0,length(hdiff))
-hpvall <- rep(0,length(hdiff))
-
-# loop through 100 randomizations
-for(i in 1:100){
-
-	sam <- resam(128,155,c(hM,hF))
-	rhdiff <- rowSums(sco[,sam[[1]]]) - rowSums(sco[,sam[[2]]])
-	hpvalu <- hpvalu + (rhdiff <= hdiff)
-	hpvall <- hpvall + (rhdiff >= hdiff)
-	if(i %% 10 == 0){print(i)}
-
-}
-
-# turn counts into p-values
-hpvalu <- hpvalu/100
-hpvall <- hpvall/100
-
-
-# refine p-values for subset with p < 0.1
-	# do 1k loops for these windows
-subw <- hpvalu < 0.1 | hpvall < 0.1
-scow <- sco[subw,]
-
-hdiffw <- hdiff[subw]
-hpvaluw <- rep(0,sum(subw))
-hpvallw <- rep(0,sum(subw))
-
-for(i in 1:1000){
-
-	sam <- resam(128,155,c(gM,gF))
-	rhdiff <- rowSums(scow[,sam[[1]]]) - rowSums(scow[,sam[[2]]])
-	hpvaluw <- hpvaluw + (rhdiff <= hdiffw)
-	hpvallw <- hpvallw + (rhdiff >= hdiffw)
-	if(i %% 20 == 0){print(i)}
-
-}
-
-# turn counts into p-values
-hpvaluw <- hpvaluw/1000
-hpvallw <- hpvallw/1000
-
-# place refined p-values into original p-value vectors
-
-hpvalu[subw] <- hpvaluw
-hpvall[subw] <- hpvallw
-
-# iterate, this time refine p-values < 0.02
-	# do 10k permutations
-
-subw <- hpvalu < 0.02 | hpvall < 0.02
-scow <- sco[subw,]
-
-hdiffw <- hdiff[subw]
-hpvaluw <- rep(0,sum(subw))
-hpvallw <- rep(0,sum(subw))
-
-for(i in 1:10000){
-
-	sam <- resam(128,155,c(gM,gF))
-	rhdiff <- rowSums(scow[,sam[[1]]]) - rowSums(scow[,sam[[2]]])
-	hpvaluw <- hpvaluw + (rhdiff <= hdiffw)
-	hpvallw <- hpvallw + (rhdiff >= hdiffw)
-	if(i %% 100 == 0){print(i)}
-
-}
-
-# turn counts into p-values
-hpvaluw <- hpvaluw / 10000
-hpvallw <- hpvallw / 10000
-
-# place refined p-values into original p-value vectors
-
-hpvalu[subw] <- hpvaluw
-hpvall[subw] <- hpvallw
-
-
-# # plot windows with low p-values
-
-# plot(log(rowMeans(sco[gpvall < 0.01,gM])/rowMeans(sco[gpvall < 0.01,gF]),2),pch=20,cex=.2)
-# plot(log(rowMeans(sco[gpvalu < 0.01,gM])/rowMeans(sco[gpvalu < 0.01,gF]),2),pch=20,cex=.2)
-
-# plot(log(gpvall,10))
-
-
-# collapse into outlier windows
-hupwin <- mergewin(win=sco[hpvall < 0.001,2:4],stat=hpvalu[hpvall < 0.001],qu=0.001,buff=10000)
-hlowin <- mergewin(win=sco[hpvalu < 0.001,2:4],stat=hpvalu[hpvalu < 0.001],qu=0.001,buff=10000)
-
-hupwin <- hupwin[order(hupwin$count,decreasing=TRUE),]
-hlowin <- hlowin[order(hlowin$count,decreasing=TRUE),]
-
-subscaf <- sco[,2] == "NW_012224765.1"
+subscaf <- sco[,2] == "NW_012234431.1"
 par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
-plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM])/rowMeans(sco[subscaf,hF]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
-plot(sco[subscaf,3],log(rowMeans(sco[subscaf,gM])/rowMeans(sco[subscaf,gF]),2),pch=20,cex=1,col=(gpvalu[subscaf] < 0.005 | gpvall[subscaf] < 0.005)+1)
+plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM])/rowMeans(sco[subscaf,hF]),2),pch=20,cex=1,col=(pvals[subscaf,"hq"] < 0.05)+1)
+plot(sco[subscaf,3],log(rowMeans(sco[subscaf,gM])/rowMeans(sco[subscaf,gF]),2),pch=20,cex=1,col=(pvals[subscaf,"gq"] < 0.05)+1)
 
-subscaf <- sco[,2] == "NW_012224765.1"
-par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
-plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM])/rowMeans(sco[subscaf,hF]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
-plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM])/rowMeans(sco[subscaf,hF]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
+boxplot(colSums(sco[subscaf & pvals$gq < 0.05,-c(1:6)]) ~ specsex)
 
-subscaf <- sco[,2] == "NW_012225537.1"
-par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
-plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
-points(sco[subscaf,3],log(rowMeans(sco[subscaf,hF]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+3)
-plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
-points(sco[subscaf,3],log(rowMeans(sco[subscaf,hF]),2),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+3)
-
-plot(sco[subscaf,3],rowMeans(sco[subscaf,hM]) - rowMeans(sco[subscaf,hF]),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
-plot(sco[subscaf,3],rowMeans(sco[subscaf,hM]) - rowMeans(sco[subscaf,hF]),pch=20,cex=1,col=(hpvalu[subscaf] < 0.005 | hpvall[subscaf] < 0.005)+1)
-
-
-# bigdups <- (gpvall < 0.001) & (sco[,2] %in% upwin[1:7,1])
-# bigdups <- colSums(sco[bigdups,c(gM,gF)])
-# MF <- c(rep(1,length(gM)),rep(2,length(gF)))
-
-# ord <- order(bigdups)
-# plot(bigdups[ord],pch=20,col=MF[ord])
-
-par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
-plot(log(rowMeans(sco[,hM])/rowMeans(sco[,hF]),2),pch=20,cex=.3,col=(hpvalu < 0.005 | hpvall < 0.005)+1)
-plot(log(rowMeans(sco[,gM])/rowMeans(sco[,gF]),2),pch=20,cex=.3,col=(gpvalu < 0.005 | gpvall < 0.005)+1)
+plot(
+	colMeans(sco[sco[,2]=="NW_012234431.1" & pvals$gq < 0.05,c(gM,gF)]),
+	colMeans(sco[sco[,2]=="NW_012234400.1" & pvals$gq < 0.05,c(gM,gF)])
+	)
