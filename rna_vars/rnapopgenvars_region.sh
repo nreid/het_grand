@@ -13,6 +13,7 @@ BED=/scratch/nmr15102/tolerance_rnaseq/callregions_rna_union.bed
 BAMLIST=/scratch/nmr15102/variants/meta/popgenrnabams.list
 
 $FB -k -0 --min-coverage 750 --max-coverage 300000 \
+-k \
 -f $GEN \
 -L $BAMLIST \
 -r $scaf | \
