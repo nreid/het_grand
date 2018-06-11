@@ -9,4 +9,4 @@ module load xz
 
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
-$parallel sh ~/het_grand/rna_vars/rnavars_targets.sh ::: $(seq 1 50 194207)
+$parallel bash ~/het_grand/rna_vars/rnavars_targets.sh ::: $(seq 1 50 194207)
