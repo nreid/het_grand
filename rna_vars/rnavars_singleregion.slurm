@@ -10,4 +10,4 @@ module load xz
 source ~/bin/parallel-slurm/parallel-slurm-setup.sh
 
 BED=/scratch/nmr15102/tolerance_rnaseq/callregions_rna_intersect.bed
-$parallel bash ~/het_grand/rna_vars/rnavars_targets.sh ::: $(cat $BED | sed 's/	/:/' | sed 's/	/-/')
+$parallel bash ~/het_grand/rna_vars/rnavars_singleregion.sh ::: $(cat $BED | cut -f 1-4 | sed 's/\t/:/' | sed 's/\t/-/')
