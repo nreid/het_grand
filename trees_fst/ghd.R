@@ -847,9 +847,35 @@ plot(apply(ghdm[subw4,subp & !sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(g
 plot(apply(ghdm[subw4,subp & sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1),ylab="Gmin - clean")
 
 
-# estimate admixture time
+# estimate admixture time filtering blocks variously
 
 1/mean(allblocks$length[allblocks$count > 4] * 1e-8)
+1/mean(allblocks$length[allblocks$count > 0] * 1e-8)
+
+bc <- sapply(blist,FUN=function(x){dim(x[x$count > 0,])[1]})
+bcp <- data.frame(bc=bc[subp],pop=pop[subp]) %>% group_by(.,pop) %>% summarize(., mean(bc))
+bcp <- bcp[[2]][c(1,7,4,5,2,6,3)]
+blp <- c()
+for(i in upop){
+	blp <- c(blp,do.call(rbind, blist[which(pop==i)])$length %>% mean())
+
+}
+
+# population mean independent block length:
+# the idea here is to treat the reference sites as representing "background introgression and error"
+# then treat the polluted sites as being an average of recent introgression, background introgression and error
+# we can use the count of blocks per individual and the mean length in a reference site to 
+# determine the contribution of "recent introgression" in the polluted sites to the mean block length
+# then use 1/mean block size in morgans as an estimate of the timing of introgression (from Graham)
+
+PBblocklength <- (blp[3] * bcp[3])-(blp[6] * bcp[6]) / (bcp[3] - bcp[6])
+
+1/(PBblocklength * 1e-8)
+
+BBblocklength <- (blp[1] * bcp[1])-(blp[6] * bcp[6]) / (bcp[1] - bcp[6])
+
+1/(BBblocklength * 1e-8)
+
 
 
 # validate a block from individual 99, chr15: NW_012224452.1.vcf.gz
