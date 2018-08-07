@@ -605,6 +605,10 @@ sssu <- unique(sss)
 
 sexes <- read.table("~/het_grand/all_sexes.txt",stringsAsFactors=FALSE)
 rownames(sexes) <- sexes[,1]
+# fix a couple that are wrong due to SDR polymorphism
+sexes["F-2",4] <- "M"
+sexes["F-20",4] <- "M"
+sexes["F-47",4] <- "M"
 
 slist <- list(
 	NorthM=which(sss=="North"&sexes[cname[10:585],3]=="M"),
