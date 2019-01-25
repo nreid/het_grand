@@ -846,18 +846,43 @@ sen <- colnames(ghdm)!="BU000078.GB" & (pop=="SP"|pop=="GB")
 plot(apply(ghdm[subw4,subp & !sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1),ylab="Gmin - contam")
 plot(apply(ghdm[subw4,subp & sen],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=factor(ghd[subw4,1]),cex=.5,ylim=c(.3,1),ylab="Gmin - clean")
 
+# replot, with chromosomes ordered numerically, using a gray shade scheme. 
+chrnum <- as.numeric(gsub("chr","",ghd[subw4,1]))
+chrcol <- rep("grey50",length(chrnum))
+chrcol[(chrnum %% 2) == 1] <- "grey90"
+
+ord <- order(chrnum,ghd[subw4,2])
+sen <- colnames(ghdm)!="BU000078.GB" & (pop=="SP"|pop=="GB")
+xticks <- c()
+for(i in seq(1,24,2)){xticks <- c(xticks,mean(which(chrnum[ord]==i)))}
+
+par(mfrow=c(2,1),mar=c(0,4,0,0),oma=c(3,3,1,1))
+plot(apply(ghdm[subw4,subp & !sen][ord,],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=chrcol[ord],cex=.5,ylim=c(.3,1),ylab="Gmin - contam",xaxt='n',yaxt='n')
+axis(2,at=seq(0.35,0.95,0.1))
+abline(h=0.93,lty=2)
+plot(apply(ghdm[subw4,subp & sen][ord,],MAR=1,FUN=min,na.rm=TRUE),pch=20,col=chrcol[ord],cex=.5,ylim=c(.3,1),ylab="Gmin - clean",xaxt='n',yaxt='n')
+abline(h=0.93,lty=2)
+axis(2,at=seq(0.35,0.95,0.1))
+axis(1,at=xticks,labels=seq(1,24,2))
 
 # estimate admixture time filtering blocks variously
 
 1/mean(allblocks$length[allblocks$count > 4] * 1e-8)
 1/mean(allblocks$length[allblocks$count > 0] * 1e-8)
 
+# vector to exclude two individuals:
+subx <- subp & colnames(ghdm) != "BU000078.GB"
+
+# block count per individual
 bc <- sapply(blist,FUN=function(x){dim(x[x$count > 0,])[1]})
-bcp <- data.frame(bc=bc[subp],pop=pop[subp]) %>% group_by(.,pop) %>% summarize(., mean(bc))
+# same but exclude wonky individual and GB individual with introgressed haplotype
+bcp <- data.frame(bc=bc[subx],pop=pop[subx]) %>% group_by(.,pop) %>% summarize(., mean(bc))
 bcp <- bcp[[2]][c(1,7,4,5,2,6,3)]
+
+# 
 blp <- c()
 for(i in upop){
-	blp <- c(blp,do.call(rbind, blist[which(pop==i)])$length %>% mean())
+	blp <- c(blp,do.call(rbind, blist[subx][which(pop[subx]==i)])$length %>% mean())
 
 }
 
@@ -868,13 +893,18 @@ for(i in upop){
 # determine the contribution of "recent introgression" in the polluted sites to the mean block length
 # then use 1/mean block size in morgans as an estimate of the timing of introgression (from Graham)
 
-PBblocklength <- (blp[3] * bcp[3])-(blp[6] * bcp[6]) / (bcp[3] - bcp[6])
+# unmodified admixture times:
+1/(blp * 1e-8)
 
-1/(PBblocklength * 1e-8)
+# mean noise + background count
+mnbc <- mean(bcp[6:7])
+# mean noise + background length
+mnbl <- sum(bcp[6:7] * blp[6:7])/sum(bcp[6:7])
 
-BBblocklength <- (blp[1] * bcp[1])-(blp[6] * bcp[6]) / (bcp[1] - bcp[6])
-
-1/(BBblocklength * 1e-8)
+# admixture time for pop i:
+i <- 1:5 #PB
+ibl <- ((blp[i] * bcp[i]) - (mnbl * mnbc))/(bcp[i]-mnbc)
+1/(ibl * 1.4e-8)
 
 
 
