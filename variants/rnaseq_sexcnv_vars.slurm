@@ -14,7 +14,7 @@ FB=~/bin/freebayes/bin/freebayes
 BED=~/bin/bedtools2/bin/bedtools
 BAM=~/bin/bamtools/bin/bamtools
 BGZ=~/bin/htslib/bgzip
-REFGEN=/scratch/nmr15102/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta
+REFGEN=~/fhet_genome/GCF_000826765.1_Fundulus_heteroclitus-3.0.2_genomic.fasta
 
 $FB -f $REFGEN -L <(cat /scratch/nmr15102/variants/meta/hetgrand.all.list | grep -v "KC-9") -t /scratch/nmr15102/variants/hetgrand_sex_cnv.txt -k  | \
 $BGZ -c >/scratch/nmr15102/variants/hetgrand.cnv.vcf.gz
