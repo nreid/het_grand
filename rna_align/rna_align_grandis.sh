@@ -21,7 +21,7 @@ bamp=$(echo $fq1 | sed 's/.fq.gz/.bam/' | sed 's/_R[12]_merged//' | sed 's/fastq
 # read group info
 run=merged
 lib=merged
-samp=$(echo $fq1 | grep -oP "(?<=/Sample_)[^/]+" | sed 's/AWJRDD00._//')
+samp=$(echo $fq1 | grep -oP "[^/]+(?=_R1)")
 lane=merged
 sub=merged
 rg=$(echo \@RG\\tID:$samp\\tPL:Illumina\\tPU:x\\tLB:$lib\\tSM:$samp)
