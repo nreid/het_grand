@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #number of cores to use 
-CORES=30		
+CORES=24		
 KMERSIZE=31
 
 # load samtools
@@ -35,7 +35,7 @@ do
 	-o $outdir/${OUTPREFIX}_kmers/tmp \
 	-m ${KMERSIZE} \
 	-t ${CORES} \
-	-s 20G \
+	-s 2G \
 	<(samtools view -bhF 256 $file | $BED bamtofastq -i /dev/stdin -fq /dev/stdout )
 
 	COUNT=$(ls $outdir/${OUTPREFIX}_kmers/tmp* | wc -l)
@@ -59,11 +59,12 @@ do
 
 		awk -f ${hawkDir}/countTotalKmer.awk ${OUTPREFIX}.kmers.hist.csv >> ${outdir}/total_kmer_counts.txt
 
+		# don't use this cutoff. edited below. 
 		CUTOFF=1 
 		echo $CUTOFF > $outdir/${OUTPREFIX}_cutoff.csv
 
 
-		${jellyfishDir}/jellyfish dump -c -L `expr $CUTOFF + 1` $outdir/${OUTPREFIX}_kmers_jellyfish > $outdir/${OUTPREFIX}_kmers.txt 
+		${jellyfishDir}/jellyfish dump -c -L 1 $outdir/${OUTPREFIX}_kmers_jellyfish > $outdir/${OUTPREFIX}_kmers.txt 
 		${sortDir}/sort --parallel=${CORES} -n -k 1 $/outdir/${OUTPREFIX}_kmers.txt > $outdir/${OUTPREFIX}_kmers_sorted.txt
 	
 		rm $outdir/${OUTPREFIX}_kmers_jellyfish	
