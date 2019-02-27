@@ -1,7 +1,8 @@
 #!/bin/bash
 
-CORES=30		#number of cores to use 
-KMERSIZE=31		# RD:61
+#number of cores to use 
+CORES=30		
+KMERSIZE=31
 
 # load samtools
 module load samtools/1.3
@@ -72,4 +73,4 @@ do
 		
 	fi
 
-
+done
