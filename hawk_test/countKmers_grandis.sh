@@ -26,7 +26,7 @@ cd ${dir}
 # loop through bam files, convert them to fastq, feed to jellyfish
 for file in $(find $dir -name "*bam" | sort)
 do
-	OUTPREFIX=$(echo $file | sed 's/.bam//')
+	OUTPREFIX=$(echo $file | sed 's/.bam//' | sed 's/.*\///')
 	
 	mkdir $outdir/${OUTPREFIX}_kmers
 
