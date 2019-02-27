@@ -36,7 +36,7 @@ do
 	-m ${KMERSIZE} \
 	-t ${CORES} \
 	-s 20G \
-	<(grandis_hawk]$ samtools view -bhF 256 $file | $BED bamtofastq -i /dev/stdin -fq /dev/stdout )
+	<(samtools view -bhF 256 $file | $BED bamtofastq -i /dev/stdin -fq /dev/stdout )
 
 	COUNT=$(ls $outdir/${OUTPREFIX}_kmers/tmp* | wc -l)
 
