@@ -57,7 +57,7 @@ do
 		awk '{print $2"\t"$1}' $outdir/${OUTPREFIX}.kmers.hist.csv > $outdir/${OUTPREFIX}_tmp
 		mv $outdir/${OUTPREFIX}_tmp $outdir/${OUTPREFIX}.kmers.hist.csv
 
-		awk -f ${hawkDir}/countTotalKmer.awk ${OUTPREFIX}.kmers.hist.csv >> ${outdir}/total_kmer_counts.txt
+		awk -f ${hawkDir}/countTotalKmer.awk $outdir/${OUTPREFIX}.kmers.hist.csv >> ${outdir}/total_kmer_counts.txt
 
 		# don't use this cutoff. edited below. 
 		CUTOFF=1 
@@ -65,7 +65,7 @@ do
 
 
 		${jellyfishDir}/jellyfish dump -c -L 1 $outdir/${OUTPREFIX}_kmers_jellyfish > $outdir/${OUTPREFIX}_kmers.txt 
-		${sortDir}/sort --parallel=${CORES} -n -k 1 $/outdir/${OUTPREFIX}_kmers.txt > $outdir/${OUTPREFIX}_kmers_sorted.txt
+		${sortDir}/sort --parallel=${CORES} -n -k 1 $outdir/${OUTPREFIX}_kmers.txt > $outdir/${OUTPREFIX}_kmers_sorted.txt
 	
 		rm $outdir/${OUTPREFIX}_kmers_jellyfish	
 		rm $outdir/${OUTPREFIX}_kmers.txt		
