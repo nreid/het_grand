@@ -6,15 +6,19 @@
 module load blas/openblas-0.2.18
 module load gsl/2.4
 module load lapack/3.7.1
+
+# script also calls a batch R script
 module load r/3.3.3
 
+# set directories
 hawkDir=~/bin/HAWK
 eigenstratDir=~/bin/HAWK/supplements/EIG6.0.1-Hawk
-isDiploid=1
 
+# set some metadata
+isDiploid=1
 noInd=$(cat sorted_files.txt | wc -l);
 
-
+# prepare some input
 $hawkDir/preProcess
 
 cat case_total_kmers.txt control_total_kmers.txt > gwas_eigenstratX.total
@@ -23,8 +27,10 @@ cat case.ind control.ind > gwas_eigenstratX.ind
 caseCount=$(cat case_sorted_files.txt | wc -l);
 controlCount=$(cat control_sorted_files.txt | wc -l);
 
+# run hawk
 $hawkDir/hawk $caseCount $controlCount
 
+# run eigenstrat smartpca
 if [ "$isDiploid" == "0" ]; then
 	$eigenstratDir/bin/smartpca -V -p $hawkDir/parfile.txt > log_eigen.txt
 else
