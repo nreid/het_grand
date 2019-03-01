@@ -1,5 +1,10 @@
 #!/bin/bash
 
+module load blas/openblas-0.2.18
+module load gsl/2.4
+module load lapack/3.7.1
+
+
 hawkDir=~/bin/HAWK
 eigenstratDir=~/bin/HAWK/supplements/EIG6.0.1-Hawk
 isDiploid=1
