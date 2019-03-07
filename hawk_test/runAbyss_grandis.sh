@@ -1,9 +1,10 @@
 #!/bin/bash
 
 abyssDir=~/bin/abyss/bin
-file=case_kmers.fasta
 suffix=25_49
 cutoff=49
+
+file=case_kmers.fasta
 $abyssDir/ABYSS -k25 -c0 -e0 $file -o case_abyss.fa
 awk '!/^>/ { next } { getline seq } length(seq) >= 49 { print $0 "\n" seq }' case_abyss.fa > case_abyss.$suffix.fa
 

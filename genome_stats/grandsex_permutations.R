@@ -219,7 +219,7 @@ abline(h=c(0.5,2),v=c(0.5,2),lty=2)
 
 #plot M/F coverage ratio for grandis and heteroclitus for a scaffold
 #subscaf <- grepl("NW_012224610.1|NW_012234400.1|NW_012234431.1",sco[,2])
-subscaf <- which(grepl("NW_012234378.1",sco[,2]))[1300:1403]
+subscaf <- which(grepl("NW_012234280.1",sco[,2]))[500:600]
 par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
 plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM+6])/rowMeans(sco[subscaf,hF+6]),2),pch=20,cex=1,col=(pvals[subscaf,"hq"] < 0.05)+1)
 plot(sco[subscaf,3],log(rowMeans(sco[subscaf,gM+6])/rowMeans(sco[subscaf,gF+6]),2),pch=20,cex=1,col=(pvals[subscaf,"gq"] < 0.05)+1)
@@ -242,6 +242,17 @@ beeswarm(colMeans(sco[subscaf & pvals$gq < 0.05,c(gM,gF)+6],na.rm=TRUE) ~ covmet
 bxplot(colMeans(sco[subscaf & pvals$gq < 0.05,c(gM,gF)+6],na.rm=TRUE) ~ covmeta[c(gM,gF),5],add=TRUE)
 beeswarm(colMeans(sco[subscaf & pvals$hq < 0.05,c(hM,hF)+6],na.rm=TRUE) ~ covmeta[c(hM,hF),5],pch=20,col=c(rgb(0,0,0,.25),rgb(1,0,0,.75)))
 bxplot(colMeans(sco[subscaf & pvals$hq < 0.05,c(hM,hF)+6],na.rm=TRUE) ~ covmeta[c(hM,hF),5],add=TRUE)
+
+
+#rxra cnv
+dev.new()
+par(mfrow=c(1,2))
+subscaf <- grepl("NW_012234280.1",sco[,2])
+beeswarm(colMeans(sco[subscaf & pvals$gq < 0.05,c(gM,gF)+6],na.rm=TRUE) ~ covmeta[c(gM,gF),5],pch=20,col=c(rgb(0,0,0,.25),rgb(1,0,0,.75)))
+bxplot(colMeans(sco[subscaf & pvals$gq < 0.05,c(gM,gF)+6],na.rm=TRUE) ~ covmeta[c(gM,gF),5],add=TRUE)
+beeswarm(colMeans(sco[subscaf & pvals$gq < 0.05,c(hM,hF)+6],na.rm=TRUE) ~ covmeta[c(hM,hF),5],pch=20,col=c(rgb(0,0,0,.25),rgb(1,0,0,.75)))
+bxplot(colMeans(sco[subscaf & pvals$gq < 0.05,c(hM,hF)+6],na.rm=TRUE) ~ covmeta[c(hM,hF),5],add=TRUE)
+
 
 # plot coverage correlation of two regions (or regional means)
 # plot individual coverage, sorted by sex
@@ -598,13 +609,19 @@ for(i in 1:dim(subvcf)[1]){
 }
 
 colnames(snpout) <- c("mf_p","hf_hm_p","gfm_gm_p","gfs_gm_p","hf_hm_r")
+colnames(snpcov) <- c("hm_pr","hm_pa","hf_pr","hf_pa","gm_pr","gm_pa","gfm_pr","gfm_pa","gfs_pr","gfs_pa","hm_rr","hm_ra","hf_rr","hf_ra","g_rr","g_ra")
 
 plot(-log(snpout[,4],10),col=factor(subvcf[,1]))
 
 
-sl <- which(subvcf[,1]=="NW_012234431.1" & rowSums(snpcov[,11:12]) > 0.5)
-# sl <- which(snpout[,3] < 1e-3 & subvcf[,1]=="NW_012224575.1")
-# sl <- which(snpout[,4] < 1e-3 & snpout[,2] < 1e-3 & subvcf[,1]=="NW_012234285.1")
+# sl <- which(subvcf[,1]=="NW_012234285.1" & rowSums(snpcov[,11:12]) > 0.5)
+# sl <- which(snpout[,2] < 1e-4 & subvcf[,1]=="NW_012234285.1")
+# sl <- which(snpout[,4] < 1e-3 & snpout[,2] < 1e-3 & subvcf[,1]=="NW_012234285.1") 
+# sl <- which(snpout[,4] < 1e-4 & subvcf[,1]=="NW_012234280.1")
+sl <- which(subvcf[,1]=="NW_012234280.1")
+sl <- which(subvcf[,1]=="NW_012234280.1" & rowSums(snpcov[,c("gm_pr","gm_pa")]) > 5)
+
+
 # sl <- which(snpout[,4] < 1e-3)[5:100]
 dev.new()
 par(mfrow=c(5,1),mar=c(0,0,0,0),oma=c(3,3,0,0))
@@ -626,9 +643,6 @@ subvcf[sl,1:5]
 #  cnv in grandis, but not heteroclitus. looks sex-DE in heteroclitus.
 	# NW_012225185.1	GeneID:105921442
 
-# snx1 is next to a Y deletion on NW_012224575.1. expression is half in males what it is in females. cool!
-# kars has a Y duplication just downstream though expression is lower in males. 
-# hsp70 on NW_012234431.1 is a shared cnv, but not DE and doesn't have much or any sequence divergence
 
 
 
@@ -674,6 +688,10 @@ subl[gr,][order(rnameta[gr,5],subl[gr,cl]),] %>% t() %>% barplot()
 subl[gm,][order(subl[gm,cl]),] %>% t() %>% barplot()
 
 
+# get average allele-specific expression per individual
+
+sl <- which(snpout[,4] < 1e-3 & snpout[,2] < 1e-3 & subvcf[,1]=="NW_012234285.1" & subvcf[,2] > 160835 & rowSums(snpcov[,11:12]) > 5) 
+
 sublg <- 0
 for(i in sl[c(25:28,33:35)]){sublg <- sublg + afunc(subvcfr,i,scalar=libscaler,meta=rnameta)}
 sublg <- sublg/7
@@ -718,9 +736,35 @@ for(i in 1:7){
 	}
 
 }
-as.dist(amhd) %>% nj() %>% midpoint.root() %>% plot(.,show.tip.label=FALSE)
 
+tr <- as.dist(amhd) %>% nj() 
+tr$tip.label <- c("het_female","het_male_1","grand_male_1","grand_female_1","grand_male_2","grand_female_2","het_male_2")
+tr <- midpoint.root(tr)
+plot(tr,show.tip.label=TRUE)
 
 
 apply(amhalm,MAR=2,FUN=function(x){table(x) %>% length()}) %>% sort() %>% table()
 
+
+# NOTES ON CNV REGIONS:
+
+# NW_012224575.1: snx1 is next to a Y deletion on NW_012224575.1. expression is half in males what it is in females. cool!
+# kars has a Y duplication just downstream though expression is lower in males. 
+# NW_012234431.1: 
+	# hsp70 on NW_012234431.1 is a shared cnv, but not DE and doesn't have much or any sequence divergence
+	# whole gene not cnv, male alleles not expressed anyway
+	# discordant reads connect this to NW_012234285.1, amh. probably insertion point for truncated copy?
+# NW_012234400.1: 
+	# hits several genes with high expression. 
+	# male-biased alleles not expressed. 
+# NW_012234285.1: AMH
+	# you know the story
+	# grandis truncated copy discordant read pairs map to region similar to cnv on NW_012234431.1
+		# these discordant reads are not expressed much
+	# many discordant read pairs at beginning of region map to CNV near NW_012225185.1:98741 !!!
+# NW_012224610.1
+	# discordant reads don't map to another cnv
+# NW_012225185.1
+	# discordant reads map to NW_012226830.1, NW_012234280.1, NW_012234285.1, NW_012228907.1
+# NW_012225189.1:1230000..1236000_gm.bam
+	# discordant reads map to NW_012228907.1 & NW_012225850.1
