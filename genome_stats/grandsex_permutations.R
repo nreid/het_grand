@@ -219,10 +219,14 @@ abline(h=c(0.5,2),v=c(0.5,2),lty=2)
 
 #plot M/F coverage ratio for grandis and heteroclitus for a scaffold
 #subscaf <- grepl("NW_012224610.1|NW_012234400.1|NW_012234431.1",sco[,2])
-subscaf <- which(grepl("NW_012234280.1",sco[,2]))[500:600]
+subscaf <- which(grepl("NW_012225146.1",sco[,2]))
 par(mfrow=c(2,1),mar=rep(0,4),oma=c(3,3,1,1))
 plot(sco[subscaf,3],log(rowMeans(sco[subscaf,hM+6])/rowMeans(sco[subscaf,hF+6]),2),pch=20,cex=1,col=(pvals[subscaf,"hq"] < 0.05)+1)
 plot(sco[subscaf,3],log(rowMeans(sco[subscaf,gM+6])/rowMeans(sco[subscaf,gF+6]),2),pch=20,cex=1,col=(pvals[subscaf,"gq"] < 0.05)+1)
+
+
+plot(sco[subscaf,3],(rowMeans(sco[subscaf,c(hF,hM)+6])),pch=20,cex=1,col=(pvals[subscaf,"hq"] < 0.05)+1)
+plot(sco[subscaf,3],(rowMeans(sco[subscaf,c(gF,gM)+6])),pch=20,cex=1,col=(pvals[subscaf,"gq"] < 0.05)+1)
 
 
 # amh coverage by sex
@@ -766,5 +770,9 @@ apply(amhalm,MAR=2,FUN=function(x){table(x) %>% length()}) %>% sort() %>% table(
 	# discordant reads don't map to another cnv
 # NW_012225185.1
 	# discordant reads map to NW_012226830.1, NW_012234280.1, NW_012234285.1, NW_012228907.1
-# NW_012225189.1:1230000..1236000_gm.bam
+# NW_012225189.1
 	# discordant reads map to NW_012228907.1 & NW_012225850.1
+# NW_012225850.1
+	# discordant reads map to NW_012228907.1, NW_012225189.1 & NW_012234431.1
+# NW_012228907.1
+	#  discordant reads map to NW_012225189.1, NW_012226830.1, NW_012225850.1, NW_012234492.1, NW_012224805.1,  NW_012234397.1,NW_012226266.1, NW_012225759.1, NW_012234280.1
